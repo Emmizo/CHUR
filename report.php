@@ -1,6 +1,7 @@
 
 <?php
 include('head_admin.php');
+include('connect.php');
 ?>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -65,8 +66,8 @@ include('head_admin.php');
     background-color: #DDF;
     color: #000;
 }
-          </style>
-          <script type="text/javascript">
+  </style>
+    <script type="text/javascript">
             /*Scroll to top when arrow up clicked BEGIN*/
 $(window).scroll(function() {
     var height = $(window).scrollTop();
@@ -164,6 +165,7 @@ $to=$_POST['to'];
 ?>  
  <thead>
   <p>
+     <div style="overflow: auto;">
 <table class="table " border="1" style="max-width: 1200px; " >
     <tr style="background-color: #cae8ea">
       <th>No</th>
@@ -186,17 +188,17 @@ $to=$_POST['to'];
 <?php
 
 //$f_name=$_GET['f_name'];
-$conn=mysqli_connect("localhost","root","","churAdmission");
-$query="SELECT DISTINCT registration.reg_id, students.ID, students.f_name,students.l_name,students.email,students.sex,students.tel,departement.dept_name,level.level_name,departement.dept_name,students.guardian_name,students.guardian_tel,students.fathername,students.mothername,students.sec_option,students.birthdate,program.program_name,registration.intake,registration.branch,program.program_name,registration.reg_date,registration.startin_intake from students
+//$conn=mysqli_connect("localhost","root","","churAdmission");
+$query="SELECT DISTINCT registration.idreg, students.reg_id, students.ID, students.f_name,students.l_name,students.email,students.sex,students.tel,departement.dept_name,level.level_name,departement.dept_name,students.guardian_name,students.guardian_tel,students.fathername,students.mothername,students.sec_option,students.birthdate,program.program_name,registration.intake,registration.branch,program.program_name,registration.reg_date,registration.startin_intake from students
          
          INNER JOIN program_dept 
          INNER JOIN registration  ON students.ID=registration.ID 
          INNER JOIN departement ON registration.dept_id=departement.dept_id
          INNER JOIN program ON program.program_id=registration.program_id
-         INNER JOIN level ON registration.level_id=level.level_id WHERE reg_date between '$from' AND '$to'";
+         INNER JOIN level ON registration.level_id=level.level_id WHERE registration.branch='kigali' AND date(`reg_date`) between '$from' AND '$to'";
  $result=mysqli_query($conn,$query) or die(mysqli_error($conn));
  $a=0;
-while ($row=mysqli_fetch_assoc($result)) {
+if($row=mysqli_fetch_assoc($result)) {
   $a++;
 ?>
 <tr>
@@ -213,16 +215,21 @@ while ($row=mysqli_fetch_assoc($result)) {
          <td><?php echo $row['intake'];?></td>
          <td><?php echo $row['reg_date'];?></td> 
          <div class="no-print">
-         <td ><button class="btn btn-default" ><a href="updateStudent.php?ID=<?=$row['ID'];?>" style="text-decoration: none;">Edit</a></td></button>
+         <td ><button class="btn btn-default" ><a href="updateStudent.php?ID=<?=$row['idreg'];?>" style="text-decoration: none;">Edit</a></td></button>
           <td ><button class="btn btn-default" ><a href="Detail.php?typeahead=<?=$row['ID']?>" style="text-decoration: none;"> Detail</a></button></td>
         </td>
-  </tr>
+  
   <?php
+}else{
+  echo "<td>No data found</td>";
 }
+
 ?>
+</tr>
 <tr style="background-color:green; color:white; font-weight:bold; font-size:20px"> 
   <!--<td colspan="8" >Total students registed from <?php //echo $from."  ".$to; ?></td>  <td><?php //echo $a;?></td></tr>-->
 </table>
+</tr>
 </p>
 </fieldset>
 <?php

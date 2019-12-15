@@ -36,7 +36,6 @@ include('connect.php');
   });
 </script>
 				</head>
-				<br><br>
 				<script type="text/javascript" src="js/jquery-1.4.1.min.js"></script>
 				<form class="form-horizontal" role="form" action="acceptance.php" name="students"  onsubmit="return validateform()" onclick="" method="POST">
 					<div class="container">
@@ -60,7 +59,63 @@ include('connect.php');
 								<label>Branch:</label>
 								<input class="form-control" type="text" name="branch" value="Kigali" readonly>
 							</div>
+							<div class=" input-field col-lg-12 col-md-12 col-sm-12" >
+								
+								<label >Department</label>
+								<select name="dept_id" class="form-control index" id="dept_id" onchange="getId2(this.value);" >
+
+                				<option  selected="selected" ></option>
+                					//populate value using php
+                					<?php
+                					
+                					
+                    				$query = "SELECT * FROM departement";
+                    				$results=mysqli_query($conn, $query);
+                    				//loop
+                   				 foreach ($results as $dept){
+                   				 			 //$program_id=$dept['program_id'];
+                   				 		?>
+                   				 			<option value="<?php echo $dept["dept_id"];?>"><?php echo $dept["dept_name"];?></option>
+
+									<?php
+												}
+                					?>
+            			</select>
+							</div>
+								<div class=" input-field col-lg-12 col-md-12 col-sm-12">
+								<label>Level </label>
+								<select name="level_id" class="form-control level" id="LevelList" onchange="getId(this.value);">
+									<option  selected="selected"></option>
+								</select>
+							</div>
+
+							<div class=" input-field col-lg-12 col-md-12 col-sm-12" class="">
+								<label>Program </label>
+								<select name="program_id" class="form-control program" id="programList">
+									<option selected="selected"></option>
+								</select>
+							</div>
+							<div class=" input-field col-lg-12 col-md-12 col-sm-12">
+	<label>Intake </label>
+									<select name="intake" class="form-control">
+										<option></option>
+										<?php
+                					//include('connect.php');
+                					
+                    				$query = "SELECT * FROM intake_table ";
+                    				$results=mysqli_query($conn, $query);
+                    				//loop
+                   				 foreach ($results as $intake){
+                   				 			 //$program_id=$dept['program_id'];
+                   				 		?>
+                   				 			<option value="<?php echo $intake["intake_name"];?>"><?php echo $intake["intake_name"];?></option>
+
+									<?php
+												}
+                					?>
+								</select>
 							
+	</div>
 							<div class=" input-field col-lg-12 col-md-12 col-sm-12">
 								<label>To</label>  
 								<div class="input-group date" >
@@ -70,7 +125,7 @@ include('connect.php');
 							</div>
 							<div class="input-field col-lg-12 col-md-12 col-sm-12">
 								<br>
-								<button class="btn btn-default" name="sendMarch" id="button">Accept</button>
+								<button class="btn btn-default btn-info" name="sendMarch" id="button">Accept</button>
 								<button class="btn btn-default  " name="resete">Cancel</button>
 							</div>
 						</div>
@@ -82,6 +137,74 @@ include('connect.php');
 	</div>
 		</form>
 	</body>
+	<script type="text/javascript">
+	$(document).ready(function()
+{
+	$(".index").change(function()
+	{
+		var dept_id=$(this).val();
+		var dataString = 'dept_id='+ dept_id;
+		//alert(dataString);
+		
+		$.ajax
+		({
+			type: "POST",
+			url: "level.php",
+			data: dataString,
+			cache: false,
+			success: function(html)
+			{
+				$(".level").html(html);
+			} 
+		});
+	});
+	
+	
+	// $(".level").change(function()
+	// {
+	// 	var dept_id=$(this).val();
+	// 	var dataString = 'dept_id='+ dept_id;
+	// 	//alert(dataString);
+	// 	var res=dept_id.split("$");
+		
+	// 	var level_id=res[0];
+	// 	var dept_id=res[1];
+	// 	let Obj={
+	// 		level_id:level_id,
+	// 		dept_id:dept_id,
+	// 	}
+	$(document).on('change', 'select#LevelList',function()
+	{
+		var level_id=$(this).val();
+		var dept_id = $('select#LevelList').find(':selected').attr('data');
+		//alert(level_id);
+		//alert(capacityValue);
+		//var dataString = 'level_id='+ level_id;
+		//alert(dataString);
+		//var res=level_id.split("$");
+		
+		//var level_id=res[0];
+		//var dept_id=res[1];
+		let Obj={
+			level_id:level_id,
+			dept_id:dept_id
+		}
+	
+		$.ajax
+		({
+			type: "POST",
+			url: "program.php",
+			data: Obj,
+			cache: false,
+			success: function(html)
+			{
+				$(".program").html(html);
+			} 
+		});
+	});
+	
+});
+    						</script>
 </html>
 <link rel="stylesheet" href="jquery-ui.css">
 <link rel="stylesheet" href="style.css">
@@ -133,6 +256,9 @@ include('connect.php');
     function validateform(){
             var  from=document.students.from.value;
             var  branch=document.students.branch.value;
+            var dept_id=document.students.dept_id.value;
+            var level_id=document.students.level_id.value;
+            var program_id=document.students.program_id.value;
             var to=document.students.to.value;
             if (from=="") {
                 alert("from when? you didn't choose any date");
@@ -141,6 +267,18 @@ include('connect.php');
             
             if (branch=="") {
             	alert("you did not choose intake you want");
+            	return false;
+            }
+            if(dept_id==""){
+            	alert("choose departement please");
+            	return false;
+            }
+            if(level_id=="select level"){
+            	alert("Choose level please");
+            	return false;
+            }
+            if(program_id=="select program"){
+            	alert("Choose program Please");
             	return false;
             }
             if (to=="") {

@@ -1,15 +1,13 @@
 
 <?php
 include('head_admin.php');
+include('connect.php');
 ?>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <link rel="stylesheet" href="css/bootstrap.min.css">
 
-<div class="container">
-		
-			<div class="panel-heading">
-				<div class="panel-body">
+
 					<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 					<meta name="viewport" content="width=device-width, initial-scale=1">
 					<link rel="stylesheet" href="css/bootstrap.min.css">
@@ -73,6 +71,18 @@ include('head_admin.php');
     background-color: #DDF;
     color: #000;
 }
+.ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default, .ui-button, html .ui-button.ui-state-disabled:hover, html .ui-button.ui-state-disabled:active {
+    border: 1px solid #c5c5c5;
+    background: #f6f6f6;
+    font-weight: normal;
+    color: #454545!important;
+}
+.ui-widget-header .ui-icon {
+    background-image: url(images/ui-icons_444444_256x240.png);
+    color: black;
+    color: black!important;
+    background:#428bca;
+}
 					</style>
 					<script type="text/javascript">
             /*Scroll to top when arrow up clicked BEGIN*/
@@ -109,7 +119,7 @@ $(document).ready(function() {
 	<div class="panel panel-default">
 	<div class="panel-heading">		
   <div class="panel panel-primary" >
-    <div class="panel-heading"><center><strong> ATTENDANCE LIST OF STUDENTS</center></div></strong>
+    <div class="panel-heading"><strong> ATTENDANCE LIST OF STUDENTS</div></strong>
     <div class="panel-body">
 <form class="form-horizontal" role="form" action="attendance.php" name="students"  onsubmit="return validateform()" onclick="" method="POST">
 	<div class="col-lg-4 col-lg-offset-4 col-md-12 col-sm-12" >
@@ -125,7 +135,6 @@ $(document).ready(function() {
 								
 								<label >Department</label>
 								<select name="dept_id" class="form-control index" id="dept_id" onchange="getId2(this.value);" >
-
                 				<option  selected="selected" ></option>
                 					//populate value using php
                 					<?php
@@ -162,7 +171,7 @@ $(document).ready(function() {
 									<select name="intake" class="form-control">
 										<option></option>
 										<?php
-                					include('connect.php');
+                					//include('connect.php');
                 					
                     				$query = "SELECT * FROM intake_table ";
                     				$results=mysqli_query($conn, $query);
@@ -195,13 +204,16 @@ $(document).ready(function() {
 </div>
 
 <div class="input-field col-lg-12 col-md-12 col-sm-12">
-	<br>
 
-<button class="btn btn-default"  name="send" id="button" >submit</button>
-<button class="btn btn-default " name="reset" >Cancel</button>
- </div>
-</div></div>
+<button class="btn btn-default btn-info"  name="send" id="button" >submit</button>
+<button class="btn btn-default  " name="reset" >Cancel</button>
+</div>
 </form>
+ </div>
+</div>
+</div>
+</div>
+</div>
 <!DOCTYPE html>
 <html>
 <head>
@@ -230,17 +242,20 @@ $(document).ready(function() {
 	});
 	
 	
-	$(".level").change(function()
+	$(document).on('change', 'select#LevelList',function()
 	{
 		var level_id=$(this).val();
-		var dataString = 'level_id='+ level_id;
-		//alert(dataString);
+		var dept_id = $('select#LevelList').find(':selected').attr('data');
+		let Obj={
+			level_id:level_id,
+			dept_id:dept_id
+		}
 	
 		$.ajax
 		({
 			type: "POST",
 			url: "program.php",
-			data: dataString,
+			data: Obj,
 			cache: false,
 			success: function(html)
 			{
@@ -251,9 +266,7 @@ $(document).ready(function() {
 	
 });
     						</script>
-</form>
 
-</div></div></div>
 <a id="back2Top" title="Back to top" href="#">&#10148;</a>
 
 

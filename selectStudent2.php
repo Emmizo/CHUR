@@ -3,82 +3,11 @@
 include('header_user.php');
 ob_start();
 ?>
-<!DOCTYPE html>
-<html>
-<head>
-	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-					<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+          <meta name="viewport" content="width=device-width, initial-scale=1">
           
-					<link rel="stylesheet" href="css/bootstrap.min.css">
-					<title>Christian University of Rwanda</title>
-					<link rel="stylesheet" href="cssform/style.css">
-	<title>CHUR</title>
-	<style type="text/css">
-	/*css for out back to top*/     
-    #back2Top {
-    width: 40px;
-    line-height: 40px;
-    overflow: hidden;
-    z-index: 999;
-    display: none;
-    cursor: pointer;
-    -moz-transform: rotate(270deg);
-    -webkit-transform: rotate(270deg);
-    -o-transform: rotate(270deg);
-    -ms-transform: rotate(270deg);
-    transform: rotate(270deg);
-    position: fixed;
-    bottom: 50px;
-    right: 0;
-    background-color: #DDD;
-    color: #555;
-    text-align: center;
-    font-size: 30px;
-    text-decoration: none;
-}
-#back2Top:hover {
-    background-color: #DDF;
-    color: #000;
-}
-	table{
-    border: 1px 
-    solid; 
-    font: 8.5px verdana;
-  }
-  </style>
-  <script type="text/javascript">
-            /*Scroll to top when arrow up clicked BEGIN*/
-$(window).scroll(function() {
-    var height = $(window).scrollTop();
-    if (height > 100) {
-        $('#back2Top').fadeIn();
-    } else {
-        $('#back2Top').fadeOut();
-    }
-});
-$(document).ready(function() {
-    $("#back2Top").click(function(event) {
-        event.preventDefault();
-        $("html, body").animate({ scrollTop: 0 }, "slow");
-        return false;
-    });
-
-});
- /*Scroll to top when arrow up clicked END*/
-</script>
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.2/jquery.min.js"></script>
-<script src="http://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.2/modernizr.js"></script>
-<script>
-  //paste this code under head tag or in a seperate js file.
-  // Wait for window load
-  $(window).load(function() {
-    // Animate loader off screen
-    $(".se-pre-con").fadeOut("slow");;
-  });
-</script>
-<!--for search code -->
-
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+          <link rel="stylesheet" href="css/bootstrap.min.css">
+          <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
     <script src="css2/typeahead.min.js"></script>
     <script>
@@ -139,73 +68,117 @@ $(document).ready(function() {
 .tt-suggestion p {
     margin: 0;
 }
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color:none ;
+}
+
+.container {
+  color: #333;
+  text-align: center;
+}
+
+h1 {
+  font-weight: normal;
+}
+
+li.s {
+  display: inline-block;
+  font-size: 1.5em;
+  list-style-type: none;
+  padding: 1em;
+  text-transform: uppercase;
+}
+i#edite {
+    color: green;
+}
+li span {
+  display: block;
+  font-size: 1.5rem;
+}
 </style>
+
   </head>
   <body>
     <form method="GET" action="Detail2.php">
-    <div class="row">
       <div class="container">
-      <div class=".col-md-6">
-          <center>
-        
+      <div class="col-md-6 col-md-offset-3">
           <div class="input-group-btn">
-<span class="input-group-addon">
-<input type="text" name="typeahead" class="form-control typeahead tt-query"autocomplete="off" spellcheck="false" placeholder="Search" required>
+              <span class="input-group-addon">
+    <input type="text" name="typeahead" class="form-control typeahead tt-query " autocomplete="on" spellcheck="false" placeholder="Search" required>
       <button class="btn btn-default" type="submit"><i class="glyphicon glyphicon-search"></i></button></span>
-  </div>
-</center>
- </div>
-  </div>
-  </div>
-  </form>
-  </div>
-</head>
-<br>
-<body  width="10" height="100" >
-  <div class="se-pre-con"></div>
-<center>
-	<div class="panel panel-default">
-		<div class="panel-heading">
+    </div><br>
+        </div>
+      </div>
+        
+  <div class="panel panel-default">
+    <div class="panel-heading">
   <div class="panel panel-primary">
-    <div class="panel-heading"><strong>LIST OF STUDENTS<form action="selectStudent2.php" method="GET" >
-	</div></strong>
+    <div class="panel-heading" ><strong>LIST OF STUDENTS<form action="selectStudent.php" method="GET" >
+  </div></strong>
+<span id="date"></span>
   <div class="wrapper">
-    <div class="panel-body"><br><br>
-  <table class="table " style="max-width: 1200px; min-width: 12px;" >
-    <thead>
-      
-      <tr style="background-color: #cae8ea">
+    <div class="panel-body" style="max-width: 100%; min-width: 12px;"><br><br>
+    	<div class="container">
+
+<?php
+$showRecordPerPage = 5;
+if(isset($_GET['page']) && !empty($_GET['page'])){
+$currentPage = $_GET['page'];
+}else{
+$currentPage = 1;
+}
+$startFrom = ($currentPage * $showRecordPerPage) - $showRecordPerPage;
+$totalEmpSQL = "SELECT DISTINCT  students.reg_id,program.program_name,registration.branch, students.ID, students.f_name,students.l_name,students.email,students.sex,students.tel,departement.dept_name,level.level_name from students
+INNER JOIN registration ON students.ID=registration.ID
+INNER JOIN program ON program.program_id=registration.program_id
+INNER JOIN departement ON registration.dept_id=departement.dept_id
+INNER JOIN level ON registration.level_id=level.level_id where branch='Karongi' ORDER BY registration.reg_date DESC";
+$allEmpResult = mysqli_query($conn, $totalEmpSQL);
+$totalEmployee = mysqli_num_rows($allEmpResult);
+$lastPage = ceil($totalEmployee/$showRecordPerPage);
+$firstPage = 1;
+$nextPage = $currentPage + 1;
+$previousPage = $currentPage - 1;
+$empSQL = "SELECT DISTINCT  registration.idreg,students.reg_id,program.program_name,registration.branch, students.ID, students.f_name,students.l_name,students.email,students.sex,students.tel,departement.dept_name,level.level_name from students
+INNER JOIN registration ON students.ID=registration.ID
+INNER JOIN program ON program.program_id=registration.program_id
+INNER JOIN departement ON registration.dept_id=departement.dept_id
+INNER JOIN level ON registration.level_id=level.level_id where branch='Karongi' ORDER BY registration.reg_date DESC LIMIT $startFrom, $showRecordPerPage";
+$empResult = mysqli_query($conn, $empSQL);
+?>
+<table class="table " style="max-width: 94%; min-width: 12px;" >
+<thead>
+<tr>
         <th>N0</th>
-      <th>First Name</th>
-        <th>LastName</th>
-        <th>Reg Number</th>
-        <th>Identity</th>
-        <th>Email</th>
-        <th>Telephone</th>
-        <th>Gender</th>
-        <th>Department</th>
-        <th>Level</th>
-        <th>program</th>
-        <th colspan="2">option</th>
+        <th scope="cal">First Name</th>
+        <th scope="cal">LastName</th>
+        <th scope="cal">Reg Number</th>
+        <th scope="cal">Identity</th>
+        <th scope="cal">Email</th>
+        <th scope="cal">Telephone</th>
+        <th scope="cal">Gender</th>
+        <th scope="cal">Department</th>
+        <th scope="cal">Level</th>
+        <th scope="cal">program</th>
+        <th colspan="2" scope="cal">option</th>
       </tr>
-    </thead>
-    <?php
-    $conn=mysqli_connect("localhost","root","","churAdmission");
-        $query="SELECT DISTINCT  registration.reg_id,program.program_name,registration.branch, students.ID, students.f_name,students.l_name,students.email,students.sex,students.tel,departement.dept_name,level.level_name from students
-         INNER JOIN registration ON students.ID=registration.ID
-         INNER JOIN program ON program.program_id=registration.program_id
-         INNER JOIN departement ON registration.dept_id=departement.dept_id
-         INNER JOIN program_dept
-         INNER JOIN level ON registration.level_id=level.level_id where branch='Karongi' ORDER BY registration.reg_date ASC";
-        $results=mysqli_query($conn,$query) or die(mysqli_error($conn));
-        $i=0;
-        while ($row=mysqli_fetch_assoc($results)) {
-         //$number=mysqli_num_rows($results);
-          $i++;
-    ?>
-    <tbody>
-    <tr>
-      <td><?php echo $i;?></td>
+</tr>
+</thead>
+<tbody>
+
+<?php
+$i=0;
+while($row = mysqli_fetch_assoc($empResult)){
+  $i++;
+?>
+<tr>
+<td><?php echo $i;?></td>
         <td><?=$row['f_name'];?></td>
          <td><?=$row['l_name'];?></td>
          <td><b><?=strtoupper($row['reg_id']);?></b></td>
@@ -216,71 +189,40 @@ $(document).ready(function() {
           <td><?=$row['dept_name'];?></td>
           <td><?=$row['level_name'];?></td>
           <td><?=$row['program_name'];?></td>
-          <td><a href="updateStudent2.php?ID=<?=$row['ID'];?>"><i class="glyphicon glyphicon-edit"></i></a></td>
-    </tr></tbody>
-<?php
-  }
-?>
-    
-</ul></ul>
+<td><a href="updateStudent.php?ID=<?=$row['idreg'];?>"><i class="glyphicon glyphicon-edit" id="edite"></i></a>
+  <button class="btn btn-default btn-info" ><a href="Detail3.php?ID=<?=$row['ID'];?>" style="color:white;"> Detail</a></button>
+          </td>
+</tr>
+<?php } ?>
+</tbody>
 </table>
-
-<a id="back2Top" title="Back to top" href="#">&#10148;</a>
-</div></div></form></strong>
-</div></div></div>
-</div></div></div>
-</div></div></div>
+<nav aria-label="Page navigation">
+<ul class="pagination">
+<?php if($currentPage != $firstPage) { ?>
+<li class="page-item">
+<a class="page-link" href="?page=<?php echo $firstPage ?>" tabindex="-1" aria-label="Previous">First</a>
+</li>
+<?php } ?>
+<?php if($currentPage >= 2) { ?>
+<li class="page-item"><a class="page-link" href="?page=<?php echo $previousPage ?>"><?php echo $previousPage ?></a></li>
+<?php } ?>
+<li class="page-item active"><a class="page-link" href="?page=<?php echo $currentPage ?>"><?php echo $currentPage ?></a></li>
+<?php if($currentPage != $lastPage) { ?>
+<li class="page-item"><a class="page-link" href="?page=<?php echo $nextPage ?>"><?php echo $nextPage ?></a></li>
+<li class="page-item">
+<a class="page-link" href="?page=<?php echo $lastPage ?>" aria-label="Next">Last</a>
+</li>
+<?php } ?>
+</ul>
+</nav>
 </div>
-</center>
- <footer class="footer">
-      <?php
+</div>
+</div>
+</div>
+</div>
+<footer class="footer">
+  <?php
+ 
   include('footer.php');
   ?>
- </footer>
-</body>
-<script type="text/javascript" src="chur/path/to/jquery-1.11.3.min.js"></script>
-<script type="text/javascript" src="/path/to/jquery.tableexport.js"></script>
-<link href="js/tableexport.css" rel="stylesheet">
-<script src="//code.jquery.com/js/jquery.min.js"></script>
-<script src="js/FileSaver.js"></script>
-<script src="js/tableexport.js"></script>
-<script src="js/Blob.js"></script>
-<script src="js/Export2Excel.js"></script>
-
-<script src="js/xls.core.min.js"></script>
-<style type="text/css">
-  
-  /* [String] column separator, [default: ","] */
-.top,
-.head {
-    caption-side: top;
-}
-
-.bottom {
-    caption-side: bottom;
-}
-</style>
-<script type="text/javascript">
-$("table").tableExport({
-    bootstrap: true
-});
-</script>
-<script type="text/javascript">
-/*$("table").tableExport({
-
-    separator: ",",                         // [String] column separator, [default: ","]
-    headings: true,                         // [Boolean], display table headings (th elements) in the first row, [default: true]
-    buttonContent: "Export",                // [String], text/html to display in the export button, [default: "Export file"]
-    addClass: "",                           // [String], additional button classes to add, [default: ""]
-    defaultClass: "btn",                    // [String], the default button class, [default: "btn"]
-    defaultTheme: "btn-default",            // [String], the default button theme, [default: "btn-default"]
-    type: "csv",                            // [xlsx, csv, txt], type of file, [default: "csv"]
-    fileName: "export",                     // [id, name, String], filename for the downloaded file, [default: "export"]
-    position: "bottom",                     // [top, bottom], position of the caption element relative to table, [default: "bottom"]
-    stripQuotes: true  
-    bootstrap: true                     // [Boolean], remove containing double quotes (.txt files ONLY), [default: true]
-});*/
-</script>
-</html>
-
-
+</footer>

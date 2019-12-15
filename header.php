@@ -6,14 +6,14 @@ ob_start();
 <html lang="en">
 <head>
   
-  <title>Christian University of Rwanda</title>
-  
+  <title> Christian University of Rwanda</title>
+  <link rel ="stylesheet" href="css/responsive.css">
   <style type="text/css">
 
   /* Paste this css to your style sheet file or under head tag */
 /* This only works with JavaScript, 
 if it's not present, don't show loader */
-.no-js #loader { display: none;  }
+/*.no-js #loader { display: none;  }
 .js #loader { display: block; position: absolute; left: 100px; top: 0; }
 .se-pre-con {
   position: fixed;
@@ -23,7 +23,7 @@ if it's not present, don't show loader */
   height: 100%;
   z-index: 9999;
   background: url(images/loader-64x/Preloader_2.gif) center no-repeat #fff;
-}
+}*/
 .footer {
     height: 30px;
   position:fixed;
@@ -31,9 +31,9 @@ if it's not present, don't show loader */
    width:100%;
      /* Height of the footer */
    background:transparent;
+   z-index:999;
 
 }
-    
    table{
     border: 1px 
     solid; 
@@ -54,6 +54,16 @@ if it's not present, don't show loader */
   border-radius: 0px;
   box-shadow: 0 9px #999;
 }
+a {
+    color: white!important;
+    font-weight: bold;
+}
+a:hover{
+color:black!important;
+}
+a#home:hover{
+  color:white!important;
+}
 
 .button:hover {background-color: #3e8e41}
 
@@ -71,9 +81,10 @@ if it's not present, don't show loader */
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="shortcut icon" href="picture/pre.jpj"> 
   <link rel="stylesheet" href="css/bootstrap.min.css">
+  <link rel ="stylesheet" href="css/responsive.css">
 </head>
 <body background="picture/wallpapers.jpg"><br><br><br>
-  <nav class="navbar navbar-inverse navbar-fixed-top">
+  <nav class="navbar navbar-fixed-top" style="background-color: #428bca;">
     <div class="container-fluid">
       <div class="navbar-header">
         <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
@@ -81,7 +92,7 @@ if it's not present, don't show loader */
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>                        
         </button>
-        <a class="navbar-brand" href="index.php">HOME</a>
+        <a class="navbar-brand" href="index.php" id="home" style="color:white; font-weight:bold;">HOME</a>
       </div>
       <div class="collapse navbar-collapse" id="myNavbar">
         <ul class="nav navbar-nav">

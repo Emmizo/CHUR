@@ -1,7 +1,8 @@
 <?php
+include('connect.php');
     $key=$_GET['key'];
     $array = array();
-   $conn=mysqli_connect("localhost","root","","churAdmission");
+   //$conn=mysqli_connect("localhost","root","","churAdmission");
     
     /*$query=mysqli_query($conn, "SELECT  registration.reg_id, students.ID, students.f_name,students.l_name,students.email,students.sex,students.tel,departement.dept_name,level.level_name from students
          INNER JOIN registration ON students.ID=registration.ID
@@ -14,7 +15,6 @@
     while($row=mysqli_fetch_assoc($query))
     {
     $array[] = $row['ID'];
-
      $array[] = $row['f_name'];
      $array[] = $row['l_name'];
      $array[] = $row['email'];

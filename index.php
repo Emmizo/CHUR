@@ -1,5 +1,6 @@
 <?php
 include('header.php');
+include('connect.php');
 ?>
 
 <html>
@@ -8,10 +9,7 @@ include('header.php');
 
 	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
   <meta charset="utf-8">
-	<div class="container">
-		<div class="panel panel-default">
-			<div class="panel-heading">
-				<div class="panel-body">
+	
 		<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<link rel="stylesheet" href="css/bootstrap.min.css">
@@ -41,8 +39,6 @@ include('header.php');
 
 					<style type="text/css">
 					@import url(https://fonts.googleapis.com/css?family=Source+Sans+Pro:200,300);
-* {
-}
 .form-horizontal {
   padding: 25px 0;
   position: relative;
@@ -50,7 +46,11 @@ include('header.php');
   
 }
 
+.form-control {
 
+    border-radius: 0px!important;
+
+}
 form input:hover {
   background-color: rgba(255, 255, 255, 0.4);
 }
@@ -71,6 +71,18 @@ select:focus {
 }
 .btn:hover {
   background-color: #A7C0DC;
+}
+.ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default, .ui-button, html .ui-button.ui-state-disabled:hover, html .ui-button.ui-state-disabled:active {
+    border: 1px solid #c5c5c5;
+    background: #f6f6f6;
+    font-weight: normal;
+    color: #454545!important;
+}
+.ui-widget-header .ui-icon {
+    background-image: url(images/ui-icons_444444_256x240.png);
+    color: black;
+    color: black!important;
+    background:#428bca;
 }
 
 
@@ -144,18 +156,20 @@ $(document).ready(function() {
 	});
 </script>
 			</head>
-			<body background="images/bgfront.jpg">
+			<body background="images/bgfront.jpg" class="fixed-sidebar fixed-sidebar skin-3">
+				<div class="container">
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<div class="panel-body">
 <!--Font Awesome (added because you use icons in your prepend/append)-->
-<link rel="stylesheet" href="https://formden.com/static/cdn/font-awesome/4.4.0/css/font-awesome.min.css" />
-				<script type="text/javascript" src="js/jquery-1.4.1.min.js"></script>
   					<div class="panel panel-primary" style=" margin: auto;">
-					 <div class="panel-heading"><center><strong><i>STUDENT REGISTRATION FORM</i></strong></center></div>
-    				<div class="panel-body">
-    					<form class="form-horizontal" method="POST" name="students"  onsubmit="return validateform()">
+	<div class="panel-heading"><strong><i>WELCOME IN CHRISTIAN UNIVERSITY OF RWANDA</i></strong></div>
+    				<div class="panel-body col-md-offset-2">
+    	
     					<?php
 //include('connect.php');
 if (isset($_POST['submit'])) {
-	$conn=mysqli_connect("localhost","root","","churAdmission");
+	//$conn=mysqli_connect("localhost","root","","churAdmission");
 /*for registration Number*/
 $characters = '0123456789';
         $charactersLength = strlen($characters);
@@ -166,7 +180,11 @@ $characters = '0123456789';
         $reg_id=$randomString; 
 /*
 check if there is no error
+
 */
+// if(empty($_POST['status']) || $_POST['status'] != 'Agree') {
+//     echo 'Please indicate that you have read and agree to the Terms and Conditions and Privacy Policy';
+// }
 if (empty($error)) {
 	
 	$f_name=trim($_POST['f_name']);
@@ -175,7 +193,6 @@ if (empty($error)) {
 	$birthdate=$_POST['birthdate'];
 	$email=trim($_POST['email']);
 	$tel=trim($_POST['tel']);
-	
 	$sec_option=trim($_POST['sec_option']);
 	$guardian_name=trim($_POST['guardian_name']);
 	$guardian_tel=trim($_POST['guardian_tel']);
@@ -188,27 +205,31 @@ if (empty($error)) {
 	$branch=trim($_POST['branch']);
 	$ID=trim($_POST['ID']);
 	$reg_date=trim($_POST['reg_date']);
+	$passed=trim($_POST['passed']);
+	$status=trim($_POST['status']);
 	//$startin_intake=trim($_POST['startin_intake']);
 	/*code will help studentsto get auto inf once he/she already registered*/
   
  
 /*code will help students registered to get notification*/
-$query4 = mysqli_query($conn,"SELECT * FROM registration WHERE ID='$ID' AND dept_id='$dept_id' AND sec_option='$sec_option'")or die(mysqli_error($conn)); 
+
+
+$query4 = mysqli_query($conn,"SELECT * FROM registration WHERE ID='$ID' AND dept_id='$dept_id' AND level_id='$level_id' AND sec_option='$sec_option'")or die(mysqli_error($conn)); 
 $rows = mysqli_fetch_assoc($query4);
 $sqr=mysqli_query($conn,"SELECT * FROM students WHERE ID='$ID'")or die(mysqli_error($conn));
 $row = mysqli_fetch_assoc($sqr);
-$sqr2=mysqli_query($conn,"SELECT * FROM students WHERE ID='$ID' AND f_name='$f_name' OR l_name='$l_name' ")or die(mysqli_error($conn));
+$sqr2=mysqli_query($conn,"SELECT * FROM students WHERE ID='$ID' ")or die(mysqli_error($conn));
 $result = mysqli_fetch_assoc($sqr2);
 if (mysqli_num_rows($sqr)<=0)   {
 	
-$sql="INSERT INTO `students` (`ID`, `f_name`, `l_name`, `sex`, `birthdate`, `email`, `tel`, `sec_option`, `guardian_name`, `guardian_tel`, `fathername`, `mothername`) VALUES ('$ID', '$f_name', '$l_name', '$sex', '$birthdate', '$email', '$tel', '$sec_option', '$guardian_name', '$guardian_tel', '$fathername', '$mothername')";
+$sql="INSERT INTO `students` (`reg_id`,`ID`, `f_name`, `l_name`, `sex`, `birthdate`, `email`, `tel`, `sec_option`, `guardian_name`, `guardian_tel`, `fathername`, `mothername`) VALUES ('$reg_id','$ID', '$f_name', '$l_name', '$sex', '$birthdate', '$email', '$tel', '$sec_option', '$guardian_name', '$guardian_tel', '$fathername', '$mothername')";
 			$query = mysqli_query($conn, $sql)or die(mysqli_error($conn));
 
-$sql3="INSERT INTO `registration` (`reg_id`, `ID`, `program_id`, `dept_id`, `reg_date`, `intake`, `branch`, `sec_option`, `level_id`) VALUES ('$reg_id', '$ID', '$program_id', '$dept_id', '$reg_date', '$intake', '$branch', '$sec_option', '$level_id')";		
+$sql3="INSERT INTO `registration` ( `ID`, `program_id`, `dept_id`,`intake`, `branch`, `sec_option`, `level_id`,`passed`,`status`) VALUES ( '$ID', '$program_id', '$dept_id', '$intake', '$branch', '$sec_option', '$level_id','$passed','$status')";		
 $query2= mysqli_query($conn, $sql3)or die(mysqli_error($conn));
 		echo('<center><div class="alert alert-success" style="color:black;">
     <strong>Success!</strong> Thank you <b>'.$f_name.' '.$l_name.'</b> for your registration<div class="alert alert-info">
-    <strong>More Info!</strong> You should <a href="#" class="alert-link">read this message </a>.
+    <strong>More Info!</strong> You should <a href="#" class="alert-link" id="single">read this message </a>.
   </div>.
   </div></center>');	
 
@@ -233,40 +254,13 @@ $query2= mysqli_query($conn, $sql3)or die(mysqli_error($conn));
 			}		
 		}
 
-		elseif (mysqli_num_rows($query4)>0 AND mysqli_num_rows($sqr2)>0)  {
-
-$qr10=mysqli_query($conn,"UPDATE `registration` SET level_id='$level_id', reg_date='$reg_date',program_id='$program_id',branch='$branch', startin_intake='0000-00-00', intake='$intake'
- WHERE `registration`.`ID`='$ID' AND dept_id='$dept_id' AND sec_option='$sec_option'")or die(mysqli_error($conn));
-
-		echo('<center><div class="alert alert-success" style="color:black;">
-    <strong>Success!</strong> Thank you <b>'.$f_name.' '.$l_name.'</b>  for your registration<div class="alert alert-info">
-    <strong>More Info!</strong> You should <a href="#" class="alert-link">read this message </a>.
-  </div>.
-  </div></center>');
-
-		$to = "$email";
-         $subject = "Registration notification from Christian University Of Rwanda";
-         
-         $message = '<b>Dear, '. strtoupper($f_name).' '.$l_name.' Your registration received well </b>';
-         $message .= "<h5>We will let you know when you will come to take acceptance letter, keep follow our website info.</h5>";
-         
-         $message .='<br><b>NB:</b> if you meet with any problem call us on 078.....update';
-         $header = "From:Christian University of Rwanda \r\n";
-         $header .= "Cc:$email \r\n";
-         $header .= "MIME-Version: 1.0\r\n";
-         $header .= "Content-type: text/html\r\n";
-         
-         $retval = mail ($to,$subject,$message,$header);
-         
-         if( $retval == true ) {
-            //echo "<center>notification sent... to ".$email." </center>";
-         }else {
-            echo "Message could not be sent...";
-
-}
+		elseif (mysqli_num_rows($query4))  {
+			echo '<center><div class="alert alert-danger">
+			<strong>Please!</strong> You already registered in departement of '.$dept_id.' and level '.$level_id.',<br>Contact Registrar!.
+		  </div></center>';
 	}
 elseif(mysqli_num_rows($sqr2)>0){
-	$sql2="INSERT INTO `registration` (`reg_id`, `ID`, `program_id`, `dept_id`, `reg_date`, `intake`, `branch`, `sec_option`, `level_id`) VALUES ('$reg_id', '$ID', '$program_id', '$dept_id', '$reg_date', '$intake', '$branch', '$sec_option', '$level_id')";		
+	$sql2="INSERT INTO `registration` (`ID`, `program_id`, `dept_id`, `intake`, `branch`, `sec_option`, `level_id`,`passed`,`status`) VALUES ('$ID', '$program_id', '$dept_id', '$intake', '$branch', '$sec_option', '$level_id','$passed','$status')";		
 $query2= mysqli_query($conn, $sql2)or die(mysqli_error($conn));
 		echo('<center><div class="alert alert-success" style="color:black;">
     <strong>Success!</strong> Thank you <b>'.$f_name.' '.$l_name.'</b> for your registration<div class="alert alert-info">
@@ -323,33 +317,31 @@ numcheck = /\d/
 return !numcheck.test(keychar)
 }
 </script>	
-<div class="se-pre-con"></div>
-					<div class="row"  >
-						
-								<div class="col-lg-4 col-lg-offset-4 col-md-12 col-sm-12" >
-							<div class=" input-field col-lg-12 col-md-12 col-sm-12" >
+
+<div class="form-group row col-md-11">
+	<form class="form-horizontal" method="POST" name="students" onsubmit="return validateform()">
+							<div class=" col-xs-6" >
 								<label>Firstname</label>
 								<input type="text" class="form-control" name="f_name"  onkeypress="return noNumbers(event)">
 								</div>
-								<div class=" input-field col-lg-12 col-md-12 col-sm-12" >
+								<div class=" col-xs-6" >
 								<label>Lastname</label>
 								<input class="form-control" type="text" name="l_name"  onkeypress="return noNumbers(event)">
 							</div>
 
 							<!--form Here are hidden inputbox for data will go in database automatically-->
-							<div class=" input-field col-lg-12 col-md-12 col-sm-12">
-								
-								<input type="hidden" class="form-control" name="reg_date" value="<?php echo date('Y-m-d')?>">
+							<div class=" hidden">
+								<input type="text" class="form-control" name="reg_date" value="<?php echo date('Y-m-d')?>">
 							</div>
-					<div class=" input-field col-lg-12 col-md-12 col-sm-12">
-								<input type="hidden" class="form-control" name="startin_intake"  >
+					<div class=" hidden">
+								<input type="text" class="form-control" name="startin_intake"  >
 							</div>
-							<div class="input-field col-lg-12 col-md-12 col-sm-12">
-								<input class="form-control" type="hidden" name="reg_id" >
+							<div class=" hidden">
+								<input class="form-control" type="text" name="reg_id" >
 							</div>
 							<!--until here-->
 							
-							<div class="input-field col-lg-12 col-md-12 col-sm-12">
+							<div class="col-xs-6">
 								<label>Gender</label>
 								<div class="form-control">
 								Male
@@ -358,29 +350,28 @@ return !numcheck.test(keychar)
 								<input type="radio" class="radio-inline" type="radio" name="sex" value="Female" >
 							</div>
 						</div>
-							<div class="input-field col-lg-12 col-md-12 col-sm-12">
+							<div class="col-xs-6">
 							<label  >Birthdate</label>
-								<div class="input-group date " >
+								<!-- <div class="input-group date " > -->
   								<input type="text" class="form-control" name="birthdate" id="datepicker"   placeholder="dd/mm/yy" >
-  								<span class="input-group-addon " ><i class="glyphicon glyphicon-calendar"  ></i></span></td>
-							</div>
+  								<!-- <span class="input-group-addon " ></span><i class="glyphicon glyphicon-calendar"  ></i></span> -->
+							<!-- </div> -->
 						</div>
 
-							<div class="input-field col-lg-12 col-md-12 col-sm-12">
-									<label>Telephone</label>
+							<div class="col-xs-6">
+								<label>Telephone</label>
   								<input class="form-control" type="text" name="tel"  onKeyPress="return isNumberKey(event)" maxlength="10">
   							</div>
-  								<div class="input-field col-lg-12 col-md-12 col-sm-12">
+  								<div class="col-xs-6">
   								<label>Email</label>
   								<input class="form-control" type="email" name="email"  >
 								</div>
-							<div class="input-field col-lg-12 col-md-12 col-sm-12">
+							<div class="col-xs-6">
 								<label>National ID</label>
 								<input class="form-control" type="text" name="ID" onKeyPress="return isNumberKey(event)" maxlength="16">
 							</div>
-							<div class="input-field col-lg-12 col-md-12 col-sm-12">
+							<div class="col-xs-6">
 								<label>Secondary section</label>
-								
 								<select class="form-control" name="sec_option">
 									<option></option>
 									<option>Computer science</option>
@@ -388,46 +379,30 @@ return !numcheck.test(keychar)
 									<option>Constraction</option>
 									<option>Accountancy</option>
 									<option>Mechanics Automobile</option>
-
 								</select>
 							</div>
 							
-							<div class="input-field col-lg-12 col-md-12 col-sm-12"> 
-								<table class="" style=" border-color: white; margin: auto; ">
-									<thead>
-									<tbody>
-								<tr>
-								<td ><label>Guardian Name</label></td>
-								<td ><label>Guardian Number</label></td>
-							</tr>
-								<tr>
-								<td><input class="form-control" type="text" name="guardian_name"  onkeypress="return noNumbers(event)" ></td>
-						<td><input class="form-control" type="text" name="guardian_tel"  onKeyPress="return isNumberKey(event)" maxlength="10"></td>
-							</tr>
-								</td>
-								</tr>
-								
+						<div class="col-xs-6"> 	
+						<label>Guardian Name</label>			
+						<input class="form-control" type="text" name="guardian_name"  onkeypress="return noNumbers(event)" >
+						</div>
+						<div class="col-xs-6"> 
+						<label>Guardian Number</label>
+						<input class="form-control" type="text" name="guardian_tel"  onKeyPress="return isNumberKey(event)" maxlength="10">
+						</div>
+							<div class="col-xs-6"> 
+								<label>Father's name</label>
+							   <input class="form-control" type="text" name="fathername"   onkeypress="return noNumbers(event)" >
+							   </div>
+							   <div class="col-xs-6"> 
+							   <label>Mother's name</label>
+								<input class="form-control" type="text" name="mothername"  onkeypress="return noNumbers(event)">
 							</div>
+							
+					
 
-							<div class="input-field col-lg-12 col-md-12 col-sm-12">
+							<div class=" col-xs-6" >
 								
-								<tr>
-								<td ><label>Father's name</label></td>
-								<td colspan="4"><label>Mother's name</label></td>
-							</tr>
-								<tr>
-								<td><input class="form-control" type="text" name="fathername"   onkeypress="return noNumbers(event)" ></td>
-								<td><input class="form-control" type="text" name="mothername"  onkeypress="return noNumbers(event)"></td>
-							</tr>
-								</td>
-								</tr>
-							</div>
-							</tbody>
-							</thead>
-						</table>
-
-							<div class=" input-field col-lg-12 col-md-12 col-sm-12" >
-								<div class="form-group">
 								<label >Department</label>
 								
 								<select name="dept_id" class="form-control index" id="dept_id" onchange="getId2(this.value);"  >
@@ -435,13 +410,11 @@ return !numcheck.test(keychar)
                 				<option  selected="selected" ></option>
                 					//populate value using php
                 					<?php
-                					include('connect.php');
                 					
                     				$query = "SELECT * FROM departement";
                     				$results=mysqli_query($conn, $query);
-                    				//loop
                    				 foreach ($results as $dept){
-                   				 			 //$program_id=$dept['program_id'];
+
                    				 		?>
                    				 			<option value="<?php echo $dept["dept_id"];?>"><?php echo $dept["dept_name"];?></option>
 
@@ -449,39 +422,33 @@ return !numcheck.test(keychar)
 												}
                 					?>
             			</select>
-            		</div>
-							</div>
-								<div class=" input-field col-lg-12 col-md-12 col-sm-12">
-									<div class="form-group">
-									<label>Level </label>
-								<select name="level_id" class="form-control level" id="LevelList" onchange="getId(this.value);" >
-								
+            		     </div>
+							
+								<div class=" col-xs-6">
+									
+									<label>Level</label>
+								<select name="level_id" class="form-control level" id="LevelList" onchange="getId(this.value);" >								
 									<option  selected="selected"></option>
 								</select>
-							</div>
+							
 						</div>
-							    <div class=" input-field col-lg-12 col-md-12 col-sm-12">
-							    	<div class="form-group">
-								<label>Program </label>
+							    <div class=" col-xs-6">
+								<label>Session </label>
 								<select name="program_id" class="form-control program" id="programList" >
 									<option selected="selected"></option>
-
 								</select>
 							</div>
-						</div>
-							   <div class=" input-field col-lg-12 col-md-12 col-sm-12">
-							   	<div class="form-group">
+						
+							   <div class=" col-xs-6">
 								<label>Branch </label>
-							
 									<select name="branch" class="form-control">
 									<option></option>
 									<option>Karongi</option>
 									<option>Kigali</option>
 								</select>
-							</div>
+							
 						</div>
-						<div class=" input-field col-lg-12 col-md-12 col-sm-12">
-						<div class="form-group">
+						<div class=" col-xs-6">
 							<label>Intake </label>
 									<select name="intake" class="form-control">
 										<option></option>
@@ -497,25 +464,40 @@ return !numcheck.test(keychar)
                    				 			<option value="<?php echo $intake["intake_name"];?>"><?php echo $intake["intake_name"];?></option>
 
 									<?php
-												}
+										}
                 					?>
 								</select>
-							
+						</div>
+						<div class="col-xs-6">
+								<label>Prenciple course you pass</label>
+								<div class="form-control">
+									1 Course
+								<input type="radio" class="radio-inline"  type="radio" name="passed" value="One course" >
+								2 or more
+								<input type="radio" class="radio-inline" type="radio" name="passed" value="Two or more courses" >
+								Already Enrolled 
+								<input type="radio" class="radio-inline" type="radio" name="passed" value="Already Enrolled" >
 							</div>
 						</div>
-					</div>
-						<div class="input-field col-lg-12 col-md-12 col-sm-12">
-								<button class="btn btn-default"  name="submit" id="button" >Submit</button>
-								<button class="btn btn-default  " name="resete">Cancel</button>
-								</div>
-							</div>
+						<div class="col-xs-6">
+						<input type="checkbox" name="status" value="agree" id="agree" /> 
+						I certify that all this information about me,above is true
 						</div>
-					</div>
+				
+				<div class="input-field col-lg-12 col-md-12 col-sm-12 col-md-offset-4" >
+				<button class="btn btn-default btn-info " name="submit" id="button" >Submit</button>
+				<button class="btn btn-default " name="resete">Cancel</button>
+				
 				</div>
-			<a id="back2Top" title="Back to top" href="#">&#10148;</a>
+	</form>
+			</div>
+			</div>
 		</div>
-		</form>
-	
+	</div>
+</div>
+</div>
+</div>
+			<a id="back2Top" title="Back to top" href="#">&#10148;</a>
 	</body>
 	</html>
 	<script   src="https://code.jquery.com/jquery-3.1.1.js"   integrity="sha256-16cdPddA6VdVInumRGo6IbivbERE8p7CQR3HzTBuELA="   crossorigin="anonymous"></script>
@@ -528,7 +510,6 @@ return !numcheck.test(keychar)
 		var dept_id=$(this).val();
 		var dataString = 'dept_id='+ dept_id;
 		//alert(dataString);
-		
 		$.ajax
 		({
 			type: "POST",
@@ -542,18 +523,32 @@ return !numcheck.test(keychar)
 		});
 	});
 	
-	
-	$(".level").change(function()
+	$(document).on('change', 'select#LevelList',function()
 	{
 		var level_id=$(this).val();
-		var dataString = 'level_id='+ level_id;
+		var dept_id = $('select#LevelList').find(':selected').attr('data');
+		//alert(level_id);
+		//alert(capacityValue);
+		//var dataString = 'level_id='+ level_id;
 		//alert(dataString);
+		//var res=level_id.split("$");
+		
+		//var level_id=res[0];
+		//var dept_id=res[1];
+		let Obj={
+			level_id:level_id,
+			dept_id:dept_id
+		}
+	 //console.log(Obj);
+	//alert(level_id);
+
+
 	
 		$.ajax
 		({
 			type: "POST",
 			url: "program.php",
-			data: dataString,
+			data:Obj,
 			cache: false,
 			success: function(html)
 			{
@@ -561,6 +556,9 @@ return !numcheck.test(keychar)
 			} 
 		});
 	});
+
+
+
 	
 });
     						</script>
@@ -572,15 +570,9 @@ return !numcheck.test(keychar)
 <style type="text/css">
 	
 	#datepicker{
-		color:black;
+	color: black!important;
+    background: border-box;
 	}
-<script src="source.js"></script>
-  <script src="now2.js"></script>
-  <style type="text/css">
-    
-    #datepicker{
-      color:black;
-    }
   </style>
 	
 	<script type="text/javascript">
@@ -611,15 +603,17 @@ return !numcheck.test(keychar)
 			var program_id=document.students.program_id.value;
 			var level_id=document.students.level_id.value;
 			var intake=document.students.intake.value;
+			var passed=document.students.passed.value;
+			var status=document.students.status.value;
 			var ID=document.students.ID.value;
 			var id2=ID.substr(5,1);
 			var id3=ID.substr(5,1);
 			var branch=document.students.branch.value;
 			var sec_option=document.students.sec_option.value;
 			var id1=ID.substr(0,1);
-			
 		    var phone=tel.substr(0,3);
 		    var phone2=guardian_tel.substr(0,3);
+
 			var letter=/^[A-Za-z". "]+$/;
 			var number=/^[0-9" "]+$/;
 			//var numberseat=/^[1-32" "]+$/;
@@ -750,13 +744,21 @@ return !numcheck.test(keychar)
 				alert("Please select level you reach on");
 				return false;
 			}
+			if(level_id=="There is no level available"){
+				alert("Level currently not available");
+				return false;
+			}
 			if (program_id=="") {
-				alert("Please select program you wish");
+				alert("Please select session you wish");
 				return false;
 			}
 
-			if (program_id=="select program") {
-				alert("Please select program you wish");
+			if (program_id=="select session") {
+				alert("Please select session you wish");
+				return false;
+			}
+			if(program_id=="There is no session available"){
+				alert("Session not available");
 				return false;
 			}
 			if (branch=="") {
@@ -768,7 +770,18 @@ return !numcheck.test(keychar)
 				alert("Please select intake");
 				return false;
 			}
-			
+			if (passed==""){
+				alert("Please choose Prenciple courses you passed or if you already Enrolled");
+				return false;
+			}
+			if(passed=="One course"){
+				alert("If you passed one principle Course we can't allow you, you must pass atleast two courses");
+				return false;
+			}
+			if(status==""){
+				alert("Please accept agreement before you submit");
+				return false;
+			}
 			}
 		</script>
 		<script  type="text/javascript">
@@ -780,10 +793,11 @@ return !numcheck.test(keychar)
 		return true;
 
 	}
-</script>
+	</script>
 
-		<footer class="footer-basic-centered">
-			<?php
-			include('footer.php');
-			?>
-			</footer>
+	<footer class="footer">
+		<?php
+	   
+		include('footer.php');
+		?>
+	  </footer>

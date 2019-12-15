@@ -1,3 +1,6 @@
+
+
+
 <?php
 include('header_user.php');
 include('connect.php');
@@ -18,6 +21,18 @@ include('connect.php');
 							font-style: italic;
 							font-size: 12px;
 						}
+	.ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default, .ui-button, html .ui-button.ui-state-disabled:hover, html .ui-button.ui-state-disabled:active {
+    border: 1px solid #c5c5c5;
+    background: #f6f6f6;
+    font-weight: normal;
+    color: #454545!important;
+}
+.ui-widget-header .ui-icon {
+    background-image: url(images/ui-icons_444444_256x240.png);
+    color: black;
+    color: black!important;
+    background:#428bca;
+}
 					</style>
 					<script type="text/javascript">
 						
@@ -36,7 +51,6 @@ include('connect.php');
   });
 </script>
 				</head>
-				<br><br>
 				<script type="text/javascript" src="js/jquery-1.4.1.min.js"></script>
 				<form class="form-horizontal" role="form" action="acceptance2.php" name="students"  onsubmit="return validateform()" onclick="" method="POST">
 					<div class="container">
@@ -60,6 +74,63 @@ include('connect.php');
 								<label>Branch:</label>
 								<input class="form-control" type="text" name="branch" value="Karongi" readonly>
 							</div>
+							<div class=" input-field col-lg-12 col-md-12 col-sm-12" >
+								
+								<label >Department</label>
+								<select name="dept_id" class="form-control index" id="dept_id" onchange="getId2(this.value);" >
+
+                				<option  selected="selected" ></option>
+                					//populate value using php
+                					<?php
+                					
+                					
+                    				$query = "SELECT * FROM departement";
+                    				$results=mysqli_query($conn, $query);
+                    				//loop
+                   				 foreach ($results as $dept){
+                   				 			 //$program_id=$dept['program_id'];
+                   				 		?>
+                   				 			<option value="<?php echo $dept["dept_id"];?>"><?php echo $dept["dept_name"];?></option>
+
+									<?php
+												}
+                					?>
+            			</select>
+							</div>
+								<div class=" input-field col-lg-12 col-md-12 col-sm-12">
+								<label>Level </label>
+								<select name="level_id" class="form-control level" id="LevelList" onchange="getId(this.value);">
+									<option  selected="selected"></option>
+								</select>
+							</div>
+
+							<div class=" input-field col-lg-12 col-md-12 col-sm-12" class="">
+								<label>Program </label>
+								<select name="program_id" class="form-control program" id="programList">
+									<option selected="selected"></option>
+								</select>
+							</div>
+							<div class=" input-field col-lg-12 col-md-12 col-sm-12">
+	<label>Intake </label>
+									<select name="intake" class="form-control">
+										<option></option>
+										<?php
+                					//include('connect.php');
+                					
+                    				$query = "SELECT * FROM intake_table ";
+                    				$results=mysqli_query($conn, $query);
+                    				//loop
+                   				 foreach ($results as $intake){
+                   				 			 //$program_id=$dept['program_id'];
+                   				 		?>
+                   				 			<option value="<?php echo $intake["intake_name"];?>"><?php echo $intake["intake_name"];?></option>
+
+									<?php
+												}
+                					?>
+								</select>
+							
+	</div>
 							<div class=" input-field col-lg-12 col-md-12 col-sm-12">
 								<label>To</label>  
 								<div class="input-group date" >
@@ -69,7 +140,7 @@ include('connect.php');
 							</div>
 							<div class="input-field col-lg-12 col-md-12 col-sm-12">
 								<br>
-								<button class="btn btn-default" name="sendMarch" id="button">Accept</button>
+								<button class="btn btn-default btn-info" name="sendMarch" id="button">Accept</button>
 								<button class="btn btn-default  " name="resete">Cancel</button>
 							</div>
 						</div>
@@ -80,6 +151,52 @@ include('connect.php');
 		</div>
 	</div>
 		</form>
+		<script type="text/javascript">
+	$(document).ready(function()
+{
+	$(".index").change(function()
+	{
+		var dept_id=$(this).val();
+		var dataString = 'dept_id='+ dept_id;
+		//alert(dataString);
+		
+		$.ajax
+		({
+			type: "POST",
+			url: "level.php",
+			data: dataString,
+			cache: false,
+			success: function(html)
+			{
+				$(".level").html(html);
+			} 
+		});
+	});
+	
+	
+	$(document).on('change', 'select#LevelList',function()
+	{
+		var level_id=$(this).val();
+		var dept_id = $('select#LevelList').find(':selected').attr('data');
+		let Obj={
+			level_id:level_id,
+			dept_id:dept_id
+		}
+		$.ajax
+		({
+			type: "POST",
+			url: "program.php",
+			data: Obj,
+			cache: false,
+			success: function(html)
+			{
+				$(".program").html(html);
+			} 
+		});
+	});
+	
+});
+    						</script>
 	</body>
 </html>
 <link rel="stylesheet" href="jquery-ui.css">
@@ -132,6 +249,9 @@ include('connect.php');
     function validateform(){
             var  from=document.students.from.value;
             var  branch=document.students.branch.value;
+            var dept_id=document.students.dept_id.value;
+            var level_id=document.students.level_id.value;
+            var program_id=document.students.program_id.value;
             var to=document.students.to.value;
             if (from=="") {
                 alert("from when? you didn't choose any date");
@@ -140,6 +260,18 @@ include('connect.php');
             
             if (branch=="") {
             	alert("you did not choose intake you want");
+            	return false;
+            }
+            if(dept_id==""){
+            	alert("choose departement please");
+            	return false;
+            }
+            if(level_id=="select level"){
+            	alert("Choose level please");
+            	return false;
+            }
+            if(program_id=="select program"){
+            	alert("Choose program Please");
             	return false;
             }
             if (to=="") {

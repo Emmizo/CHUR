@@ -144,8 +144,7 @@ $program_id=$_POST['program_id'];
 $to=$_POST['to'];
 
 $conn=mysqli_connect("localhost","root","","churAdmission")or die(mysqli_connect_error());
- $query="SELECT DISTINCT registration.ID, registration.reg_date, registration.reg_id, students.ID,students.f_name,students.l_name,students.email,students.sex,students.tel,departement.dept_name,level.level_name,departement.dept_name,program.program_name, registration.intake,registration.branch,program.program_name,registration.startin_intake, faculity.faculity_name from students
-        INNER JOIN program_dept 
+ $query="SELECT DISTINCT registration.ID, registration.reg_date, students.reg_id, students.ID,students.f_name,students.l_name,students.email,students.sex,students.tel,departement.dept_name,level.level_name,departement.dept_name,program.program_name, registration.intake,registration.branch,program.program_name,registration.startin_intake, faculity.faculity_name from students
          INNER JOIN registration  ON students.ID=registration.ID
          INNER JOIN departement ON registration.dept_id=departement.dept_id 
           
@@ -161,6 +160,7 @@ if(mysqli_num_rows($results)<=0){
 }
 else{
 ?>
+ <div style="overflow: auto;">
  	<table  class="table table-hover">
 		<tr><td><img src="pic/churlogo.png"></td><td><b>Christian University Of Rwanda<br>P.O.Box 6638 Kigali<br>Tel:(+250)788310048/0789850000/0788310047(<B>KIGALI</B>)<br>
 		Tel:(+250)788310048/0789850000/0788310047(<B>KARONGI)</B><br>Email:info@chur.ac.rw<br>Website: http://www.chur.ac.rw</b></td></tr>
@@ -252,6 +252,7 @@ $i++;
 }
 ?>
 </table>
+</div>
 </p>
 <?php
 }}

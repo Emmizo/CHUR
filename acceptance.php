@@ -1,43 +1,45 @@
 
 <?php
 include('head_admin.php');
+require('connect.php');
 ?>
 <!DOCTYPE html>
 <html>
 <head>
-	
   
-					<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-					<meta name="viewport" content="width=device-width, initial-scale=1">
-					<link rel="stylesheet" href="css/bootstrap.min.css">
-					<title>Christian University of Rwanda</title>
-					<link rel="stylesheet" href="cssform/styley.css">
-					<style type="text/css">
-						.error{
-							color: red;
-							
-							font-style: italic;
-							font-size: 12px;
-						}
-		img {
+  
+          <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+          <meta name="viewport" content="width=device-width, initial-scale=1">
+          <link rel="stylesheet" href="css/bootstrap.min.css">
+          <title>Christian University of Rwanda</title>
+          <link rel="stylesheet" href="cssform/styley.css">
+           <link rel ="stylesheet" href="css/responsive.css">
+          <style type="text/css">
+            .error{
+              color: red;
+              
+              font-style: italic;
+              font-size: 12px;
+            }
+    img {
     display: block;
     /*margin: 0 left;*/
-	}
+  }
   body{
     font-family: Calibri ;
     font-size: 13px;
   }
-	table{
-		width: 300px;
-		border:4px;
-		border-color: black;
-	}
-	table.u{
-		width: 600px;
-		font-family: Calibri ;
-		font-size: 10px;
-	}
-	@media all{
+  table{
+    width: 300px;
+    border:4px;
+    border-color: black;
+  }
+  table.u{
+    width: 600px;
+    font-family: Calibri ;
+    font-size: 10px;
+  }
+  @media all{
     .page-break{ display: block; }
   }
   @media print{
@@ -51,7 +53,7 @@ include('head_admin.php');
   pre, blockquote ,p.print {
     page-break-inside: avoid;
   }}
-	@media print{
+  @media print{
   @page {
     size: auto;   /* auto is the initial value */
     size: A4 portrait;
@@ -89,9 +91,9 @@ p.main {
     background-color: #DDF;
     color: #000;
 }
-	</style>
-	
-	<script type="text/javascript">
+  </style>
+  
+  <script type="text/javascript">
             /*Scroll to top when arrow up clicked BEGIN*/
 $(window).scroll(function() {
     var height = $(window).scrollTop();
@@ -122,7 +124,7 @@ $(document).ready(function() {
     $(".se-pre-con").fadeOut("slow");;
   });
 </script>
-	<script type="text/javascript">     
+  <script type="text/javascript">     
     function PrintDiv() {    
        var divToPrint = document.getElementById('divToPrint');
        var popupWin = window.open('', '_blank', 'width=1100,height=600');
@@ -133,11 +135,15 @@ $(document).ready(function() {
  </script>
 </head>
 <body ><br>
-	<?php
+  <?php
 
 if(isset($_POST['sendMarch'])){
 $from=$_POST['from'];
 $branch=$_POST['branch'];
+$dept=$_POST['dept_id'];
+$level=$_POST['level_id'];
+$pro=$_POST['program_id'];
+$intake=$_POST['intake'];
 $to=$_POST['to'];
 ?>
 <div class="container">
@@ -148,77 +154,76 @@ $to=$_POST['to'];
       
     <div class="panel-heading" style="text-align: center;"><strong >LIST OF STUDENTS ACCEPTANCE LETTER FOR  INTAKE</div></strong>
     <div class="panel-body" style="max-width: 650px;">
-    <div id="divToPrint">	
+    <div id="divToPrint"> 
 <?php
-$con=mysqli_connect("localhost","root","","churAdmission")or die(mysqli_connect_error());
- $query="SELECT DISTINCT registration.ID, registration.reg_date, registration.reg_id, students.ID,students.f_name,students.l_name,students.email,students.sex,students.tel,departement.dept_name,level.level_name,departement.dept_name,program.program_name, registration.intake,registration.branch,program.program_name,registration.startin_intake, faculity.faculity_name from students
-        INNER JOIN program_dept 
+//$con=mysqli_connect("localhost","root","","churAdmission")or die(mysqli_connect_error());
+ $query="SELECT DISTINCT registration.ID, registration.reg_date, students.reg_id, students.ID,students.f_name,students.l_name,students.email,students.sex,students.tel,departement.dept_name,level.level_name,departement.dept_name,program.program_name, registration.intake,registration.branch,program.program_name,registration.startin_intake, faculity.faculity_name from students
          INNER JOIN registration  ON students.ID=registration.ID
          INNER JOIN departement ON registration.dept_id=departement.dept_id 
           
           INNER JOIN faculity ON faculity.faculty_id=departement.faculity_id
           INNER JOIN program ON program.program_id=registration.program_id
-         INNER JOIN level ON level.level_id=registration.level_id WHERE  branch='$branch' AND reg_date between '$from' AND '$to' ";
+INNER JOIN level ON level.level_id=registration.level_id WHERE intake='$intake' AND branch='$branch' AND date(`reg_date`) between '$from' AND '$to' AND registration.dept_id='$dept' AND registration.level_id='$level' AND registration.program_id='$pro' ";
         
 
- $result=mysqli_query($con,$query) or die(mysqli_error($con));
+ $result=mysqli_query($conn,$query) or die(mysqli_error($conn));
  if(mysqli_num_rows($result)<=0){
   echo "<center><p style='color:red;'>There is no acceptance letter found between $from To $to in $branch Branch</p> </center>";
 }
 else{
 while ($rows=mysqli_fetch_assoc($result)) {
-	//$date=$rows['date'];
-	?>
-		<p>
+  //$date=$rows['date'];
+  ?>
+    <p>
       <div class="page-break">
     <DIV style="page-break-after:always">
-	<table class="table " style="font-size: 10px">
-		<tr><td><img src="pic/churlogo.png"></td><td><b>Christian University Of Rwanda<br>P.O.Box 6638 Kigali<br>Tel:(+250)788310048/0789850000/0788310047(<B>KIGALI</B>)<br>
-		Tel:(+250)788310048/0789850000/0788310047(<B>KARONGI)</B><br>Email:info@chur.ac.rw<br>Website: http://www.chur.ac.rw</b></td></tr>
-		</table><p style="border-bottom: solid;"></p>
-	<b><p style="text-align: right;">Date:<?php echo date('d');?>/ <?php echo date('M');?> / <?php echo date('Y');?></p></b>
-			<?php
-			echo "<b>To: ".strtoupper($rows['f_name'].' '.$rows['l_name'])."<br>Reference No:  ".''.strtoupper($rows['reg_id']).'</b>';
-			?>
-			<center><h4><b><u>ACCEPTANCE LETTER</u></b></h4></center><br>
-			<?php
-			$q="SELECT * FROM fees";
-			$result2=mysqli_query($con,$q)or die(mysqli_error($con));
-			while ($row=mysqli_fetch_assoc($result2)) {
-				# code...
-			?>
-			<?php
-			$qr="SELECT * FROM chairman";
-			$result3=mysqli_query($con,$qr)or die(mysqli_error($con));
-			while ($ro=mysqli_fetch_assoc($result3)) {
-				$total=$row['reg_fees']+$row['student_ID_card']+$row['chursu']+$row['insurance']+$row['library_card']+$row['caution_fees'];
- 	echo "Dear Student,<br><br> We are pleased to inform you that your application for admission letter has been accepted at Christian University of Rwanda in <b>".$rows['faculity_name']."</b>, departement of <b>".$rows['dept_name'].'</b> in <b>'.$rows['program_name'].'</b> program <b>'.strtolower($rows['intake']).' intake</b>. Please note the following key information and important dates: <br>
- 	<ul><li>The starting of school will be on <b>'.$rows['startin_intake'].'</b></li>
- 	<li>You are requested to pay <b>'.$total.' Frw</b> before registration distributed as follows:</li></ul><br>
- 	<table border="2" width="500px;">
- 		<tr><th>TYPE OF FEE</th><th>AMOUNT</th></tr>
- 		<tr><td>Registration fees</td><td><b>'.$row['reg_fees'].' Frw</b></td></tr> 
- 		<tr><td>Student ID Card</td><td><b>'.$row['student_ID_card'].' Frw </b></td></tr>
- 		<tr><td>CHURSU contribution</td><td><b>'.$row['chursu'].' Frw</b></td></tr>
-		<tr><td>Insturance against accident</td><td><b>'.$row['insurance'].' Frw</b></td></tr>
-		<tr><td>Student Library Card</td><td><b>'.$row['library_card'].' Frw</b></td></tr>
-		<tr><td>Caution Money</td><td><b>'.$row['caution_fees'].' Frw</b></td></tr>
- 		<tr><td>Tuition fees</td><td><b>'.$row['tuition_fees'].' Frw</b></td></tr>
- 		</table><br><b>CHUR ACCOUNT NUMBER: <br>
- 		I&M Bank:</b>  00010-5044731-01-41<br>
- 		<b>Equity Bank:</b> 4002200480497<br>
- 		<b>COGEBANQUE:</b>  23-01390146734-79
- 		<br>Once again, I take this opportunity to congratulate and wish you an enriching exprience at The <br> Christian University of Rwanda.<br><br><br><br><br><b>'.$ro['full_name'].'<br>'.$ro['post'].'</b></DIV></div></p>';
- 		}
+  <table class="table " style="font-size: 9px">
+    <tr><td><img src="pic/churlogo.png"></td><td><b>Christian University Of Rwanda<br>P.O.Box 6638 Kigali<br>Tel:(+250)788310048/0789850000/0788310047(<B>KIGALI</B>)<br>
+    Tel:(+250)788310048/0789850000/0788310047(<B>KARONGI)</B><br>Email:info@chur.ac.rw<br>Website: http://www.chur.ac.rw</b></td></tr>
+    </table><p style="border-bottom: solid;"></p>
+  <b><p style="text-align: right;">Date:<?php echo date('d');?>/ <?php echo date('M');?> / <?php echo date('Y');?></p></b>
+      <?php
+      echo "<b>To: ".strtoupper($rows['f_name'].' '.$rows['l_name'])."<br>Reference No:  ".''.strtoupper($rows['reg_id']).'</b>';
+      ?>
+      <center><h4><b><u>ACCEPTANCE LETTER</u></b></h4></center><br>
+      <?php
+      $q="SELECT * FROM fees";
+      $result2=mysqli_query($conn,$q)or die(mysqli_error($conn));
+      while ($row=mysqli_fetch_assoc($result2)) {
+        # code...
+      ?>
+      <?php
+      $qr="SELECT * FROM chairman";
+      $result3=mysqli_query($conn,$qr)or die(mysqli_error($conn));
+      while ($ro=mysqli_fetch_assoc($result3)) {
+        $total=$row['reg_fees']+$row['student_ID_card']+$row['chursu']+$row['insurance']+$row['library_card']+$row['caution_fees'];
+  echo "Dear Student,<br><br> We are pleased to inform you that your application for admission letter has been accepted at Christian University of Rwanda in <b>".$rows['faculity_name']."</b>, departement of <b>".$rows['dept_name'].'</b> in <b>'.$rows['program_name'].'</b> program <b>'.strtolower($rows['intake']).' intake</b>. Please note the following key information and important dates: <br>
+  <ul><li>The starting of school will be on <b>'.$rows['startin_intake'].'</b></li>
+  <li>You are requested to pay <b>'.$total.' Frw</b> before registration distributed as follows:</li></ul><br>
+  <table border="2" width="500px;">
+    <tr><th>TYPE OF FEE</th><th>AMOUNT</th></tr>
+    <tr><td>Registration fees</td><td><b>'.$row['reg_fees'].' Frw</b></td></tr> 
+    <tr><td>Student ID Card</td><td><b>'.$row['student_ID_card'].' Frw </b></td></tr>
+    <tr><td>CHURSU contribution</td><td><b>'.$row['chursu'].' Frw</b></td></tr>
+    <tr><td>Insturance against accident</td><td><b>'.$row['insurance'].' Frw</b></td></tr>
+    <tr><td>Student Library Card</td><td><b>'.$row['library_card'].' Frw</b></td></tr>
+    <tr><td>Caution Money</td><td><b>'.$row['caution_fees'].' Frw</b></td></tr>
+    <tr><td>Tuition fees</td><td><b>'.$row['tuition_fees'].' Frw</b></td></tr>
+    </table><br><b>CHUR ACCOUNT NUMBER: <br>
+    I&M Bank:</b>  00010-5044731-01-41<br>
+    <b>Equity Bank:</b> 4002200480497<br>
+    <b>COGEBANQUE:</b>  23-01390146734-79
+    <br>Once again, I take this opportunity to congratulate and wish you an enriching exprience at The <br> Christian University of Rwanda.<br><br><br><b>'.$ro['full_name'].'<br>'.$ro['post'].'</b></DIV></div></p>';
+    }
 
 //else if($rows==false){
-	//echo "<center>From <b>".$from."</b> to <b>".$to."</b> no students found.</center>";
+  //echo "<center>From <b>".$from."</b> to <b>".$to."</b> no students found.</center>";
 //}
          }
 }
 }}
 
-?>	
+?>  
 
 
 

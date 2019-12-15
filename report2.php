@@ -1,15 +1,13 @@
 
 <?php
 include('header_user.php');
+include('connect.php');
 ?>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <link rel="stylesheet" href="css/bootstrap.min.css">
 
-<div class="container">
-		
-			<div class="panel-heading">
-				<div class="panel-body">
+
 					<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 					<meta name="viewport" content="width=device-width, initial-scale=1">
 					<link rel="stylesheet" href="css/bootstrap.min.css">
@@ -53,6 +51,18 @@ include('header_user.php');
     background-color: #DDF;
     color: #000;
 }
+.ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default, .ui-button, html .ui-button.ui-state-disabled:hover, html .ui-button.ui-state-disabled:active {
+  border: 1px solid #c5c5c5;
+  background: #f6f6f6;
+  font-weight: normal;
+  color: #454545!important;
+}
+.ui-widget-header .ui-icon {
+  background-image: url(images/ui-icons_444444_256x240.png);
+  color: black;
+  color: black!important;
+  background:#428bca;
+}
 					</style>
 					<script type="text/javascript">
             /*Scroll to top when arrow up clicked BEGIN*/
@@ -83,13 +93,16 @@ $(document).ready(function() {
   });
 </script>
 </head>
-<body  >
-   <div class="se-pre-con"></div>
+<body>
+   <!-- <div class="se-pre-con"></div> -->
+
 <div class="container">
-	<div class="panel panel-default">
+
+
+<div class="panel panel-default">
 	<div class="panel-heading" >		
   <div class="panel panel-primary">
-    <div class="panel-heading"><center><strong>LIST OF STUDENTS  REGISTERED FROM </center></div></strong>
+    <div class="panel-heading"><strong>LIST OF STUDENTS  REGISTERED FROM </div></strong>
     <div class="panel-body">
 <form action=""  name="students" onsubmit="return validateform()" method="post">
 <div class="col-lg-4 col-lg-offset-4 col-md-12 col-sm-12" >
@@ -109,13 +122,13 @@ $(document).ready(function() {
 </div>
 <div class="input-field col-lg-12 col-md-12 col-sm-12">
   <br>
-<button class="btn btn-default"  name="send" id="button" >Report</button>
+<button class="btn btn-default "  name="send" id="button" >Report</button>
 <button class="btn btn-default  " name="reset">Cancel</button>
-<center>
   <div>
   <br>
 	<button class="btn btn-default"><a href="javascript:Clickheretoprint()"  style="text-decoration: none;">PRINT</a></button></center>
- </div></div></div>
+ </div></div>
+</div>
 <!DOCTYPE html>
 <html>
 <head>
@@ -152,6 +165,7 @@ $to=$_POST['to'];
 ?>	
  <thead>
  	<p>
+     <div style="overflow: auto;">
 <table class="table " border="1" style="max-width: 1200px; " >
 		<tr style="background-color: #cae8ea">
       <th>No</th>
@@ -174,14 +188,14 @@ $to=$_POST['to'];
 <?php
 
 //$f_name=$_GET['f_name'];
-$conn=mysqli_connect("localhost","root","","churAdmission");
-$query="SELECT DISTINCT registration.reg_id, students.ID, students.f_name,students.l_name,students.email,students.sex,students.tel,departement.dept_name,level.level_name,departement.dept_name,students.guardian_name,students.guardian_tel,students.fathername,students.mothername,students.sec_option,students.birthdate,program.program_name,registration.intake,registration.branch,program.program_name,registration.reg_date,registration.startin_intake from students
+//$conn=mysqli_connect("localhost","root","","churAdmission");
+$query="SELECT DISTINCT registration.idreg,students.reg_id, students.ID, students.f_name,students.l_name,students.email,students.sex,students.tel,departement.dept_name,level.level_name,departement.dept_name,students.guardian_name,students.guardian_tel,students.fathername,students.mothername,students.sec_option,students.birthdate,program.program_name,registration.intake,registration.branch,program.program_name,registration.reg_date,registration.startin_intake from students
          
          INNER JOIN program_dept 
          INNER JOIN registration  ON students.ID=registration.ID 
          INNER JOIN departement ON registration.dept_id=departement.dept_id
          INNER JOIN program ON program.program_id=registration.program_id
-         INNER JOIN level ON registration.level_id=level.level_id WHERE reg_date between '$from' AND '$to'";
+         INNER JOIN level ON registration.level_id=level.level_id WHERE registration.branch='karongi' AND reg_date between '$from' AND '$to'";
  $result=mysqli_query($conn,$query) or die(mysqli_error($conn));
  $a=0;
 while ($row=mysqli_fetch_assoc($result)) {
@@ -200,7 +214,7 @@ while ($row=mysqli_fetch_assoc($result)) {
 	       <td><?php echo $row['level_name'];?></td>
 	       <td><?php echo $row['intake'];?></td>
 	       <td><?php echo $row['reg_date'];?></td>  
-	       <td><button class="btn btn-default" ><a href="updateStudent2.php?ID=<?=$row['ID'];?>" style="text-decoration: none;">Edit</a></td></button>
+	       <td><button class="btn btn-default" ><a href="updateStudent2.php?ID=<?=$row['idreg'];?>" style="text-decoration: none;">Edit</a></td></button>
           <td ><button class="btn btn-default" ><a href="Detail2.php?typeahead=<?=$row['ID']?>" style="text-decoration: none;"> Detail</a></button></td>
 	</tr>
 	<?php
@@ -209,6 +223,7 @@ while ($row=mysqli_fetch_assoc($result)) {
 <tr style="background-color:green; color:white; font-weight:bold; font-size:20px"> 
 	<!--<td colspan="8" >Total students registed from <?php //echo $from."  ".$to; ?></td>  <td><?php //echo $a;?></td></tr>-->
 </table>
+</div>
 </p>
 </fieldset>
 <?php
@@ -218,7 +233,22 @@ while ($row=mysqli_fetch_assoc($result)) {
 </div>
 </div>
 </div>
+
+
+
+
+
+
+
+
 </div>
+
+
+
+
+
+
+
 </div>
 </div>
 </div>
@@ -240,9 +270,7 @@ while ($row=mysqli_fetch_assoc($result)) {
 	#datepicker{
 		color:black;
 	}
-<script src="source.js"></script>
-  <script src="now2.js"></script>
-  <style type="text/css">
+
     
     #datepicker{
       color:black;
@@ -261,10 +289,7 @@ while ($row=mysqli_fetch_assoc($result)) {
 	#datepicker{
 		color:black;
 	}
-<script src="source.js"></script>
-  <script src="now2.js"></script>
-  <style type="text/css">
-    
+
     #datepicker{
       color:black;
     }

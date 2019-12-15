@@ -35,13 +35,13 @@ return !numcheck.test(keychar)
 }
 </script>		
 </head>
-<body><br><br><br><br>
+<body>
 	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<div class="container">
 	<div class="panel panel-default">
 	<div class="panel panel-primary">
-	<div class="panel-heading"><center><strong>USER FORM</strong></center></div>
+	<div class="panel-heading"><strong>USER FORM</strong></div>
    	<div class="panel-body">
    		<div class="se-pre-con"></div>
     					<?php
@@ -77,8 +77,8 @@ if (isset($_POST['submit'])) {
 		$user_level=trim($_POST['user_level']);
 		
 		//$dob=$_POST['month'] . "-" . $_POST['day'] . "-" . $_POST['year'];
-	$con=mysqli_connect("localhost","root","","churadmission");
-	if (!$con) {
+	//$con=mysqli_connect("localhost","root","","churadmission");
+	if (!$conn) {
 		echo "Unable to connect to database";
 	}
 	$sql="INSERT INTO `admin` (`user_id`, `fullname`, `user_username`, `user_password`, `user_email`, `user_level`) VALUES (NULL, '$fullname', '$user_username', '$user_password', '$user_email', '$user_level');";
@@ -139,7 +139,7 @@ if ($query==true) {
 
 							<div class="input-field col-lg-12 col-md-12 col-sm-12">
 								<br>
-								<button  class="btn btn-default" name="submit" id="button">Submit</button>
+								<button  class="btn btn-default btn-info" name="submit" id="button">Submit</button>
 							</div>
 						</div>
 					</div>

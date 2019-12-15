@@ -42,7 +42,7 @@ include('connect.php');
     					?>
                         <center>
     					   <table class="table">
-								<tr><th>Chairman name</th><th>POST</th><th>Option</th></tr>
+								<tr><th>Chairman name</th><th>Position</th><th>Option</th></tr>
                             	<tr><td><?php echo $row['full_name'] ?> </td><td><?php echo $row['post'] ?> </td><td><button class="btn btn-default"><a href="editchairman.php?chairman_id=<?=$chairman_id;?>"> EDIT</a></button></td></tr>
 							</table>
                             </center>

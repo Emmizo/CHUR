@@ -1,15 +1,17 @@
 
 <?php
 include('header_user.php');
+include('connect.php');
 ?>
+
+
+
+
+
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <link rel="stylesheet" href="css/bootstrap.min.css">
 
-<div class="container">
-		
-			<div class="panel-heading">
-				<div class="panel-body">
 					<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 					<meta name="viewport" content="width=device-width, initial-scale=1">
 					<link rel="stylesheet" href="css/bootstrap.min.css">
@@ -73,6 +75,18 @@ include('header_user.php');
     background-color: #DDF;
     color: #000;
 }
+.ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default, .ui-button, html .ui-button.ui-state-disabled:hover, html .ui-button.ui-state-disabled:active {
+    border: 1px solid #c5c5c5;
+    background: #f6f6f6;
+    font-weight: normal;
+    color: #454545!important;
+}
+.ui-widget-header .ui-icon {
+    background-image: url(images/ui-icons_444444_256x240.png);
+    color: black;
+    color: black!important;
+    background:#428bca;
+}
 					</style>
 					<script type="text/javascript">
             /*Scroll to top when arrow up clicked BEGIN*/
@@ -103,12 +117,16 @@ $(document).ready(function() {
 	});
 </script>
 </head>
-<body  >
+
+
+
+
+
+<body>
 <div class="container">
 	   <div class="se-pre-con"></div>  
-	<div class="panel panel-default">
-	<div class="panel-heading">		
-  <div class="panel panel-primary" style="max-width: 900px; margin: auto;">
+	<div class="panel panel-default">	
+  <div class="panel panel-primary">
     <div class="panel-heading"><center><strong> ATTENDANCE LIST OF STUDENTS</center></div></strong>
     <div class="panel-body">
 <form class="form-horizontal" role="form" action="attendance2.php" name="students"  onsubmit="return validateform()" onclick="" method="POST">
@@ -144,7 +162,7 @@ $(document).ready(function() {
                 					?>
             			</select>
 							</div>
-								<div class=" input-field col-lg-12 col-md-12 col-sm-12">
+							<div class=" input-field col-lg-12 col-md-12 col-sm-12">
 								<label>Level </label>
 								<select name="level_id" class="form-control level" id="LevelList" onchange="getId(this.value);">
 									<option  selected="selected"></option>
@@ -158,11 +176,11 @@ $(document).ready(function() {
 								</select>
 							</div>
 							<div class=" input-field col-lg-12 col-md-12 col-sm-12">
-	<label>Intake </label>
+	                         <label>Intake </label>
 									<select name="intake" class="form-control">
 										<option></option>
 										<?php
-                					include('connect.php');
+                					//include('connect.php');
                 					
                     				$query = "SELECT * FROM intake_table ";
                     				$results=mysqli_query($conn, $query);
@@ -177,7 +195,7 @@ $(document).ready(function() {
                 					?>
 								</select>
 							
-	</div>
+	                             </div>
 	<div class=" input-field col-lg-12 col-md-12 col-sm-12">
 	<label>Branche </label>
 	<select name="branch" class="form-control">
@@ -199,13 +217,13 @@ $(document).ready(function() {
 <button class="btn btn-default"  name="send" id="button" >submit</button>
 <button class="btn btn-default  " name="resete">Cancel</button>
  </div>
-</div></div>
+</div>
 </form>
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html>
 <head>
 	<title></title>
-</head>
+</head> -->
 <script type="text/javascript">
 	$(document).ready(function()
 {
@@ -229,17 +247,21 @@ $(document).ready(function() {
 	});
 	
 	
-	$(".level").change(function()
+	$(document).on('change', 'select#LevelList',function()
 	{
 		var level_id=$(this).val();
-		var dataString = 'level_id='+ level_id;
-		//alert(dataString);
+		var dept_id = $('select#LevelList').find(':selected').attr('data');
+		let Obj={
+			level_id:level_id,
+			dept_id:dept_id
+		}
+	
 	
 		$.ajax
 		({
 			type: "POST",
 			url: "program.php",
-			data: dataString,
+			data: Obj,
 			cache: false,
 			success: function(html)
 			{
@@ -249,13 +271,25 @@ $(document).ready(function() {
 	});
 	
 });
-    						</script>
-</form>
+</script>
+<!-- </form> -->
 
 </div>
+</div>
+</div>
+</div>
 <a id="back2Top" title="Back to top" href="#">&#10148;</a>
-</body>
-</html>
+<!-- </body>
+</html> -->
+
+
+
+
+
+
+
+
+
 <link rel="stylesheet" href="jquery-ui.css">
 <link rel="stylesheet" href="style.css">
 <script src="source.js"></script>
@@ -265,9 +299,6 @@ $(document).ready(function() {
 	#datepicker{
 		color:black;
 	}
-<script src="source.js"></script>
-  <script src="now2.js"></script>
-  <style type="text/css">
     
     #datepicker{
       color:black;
@@ -286,9 +317,6 @@ $(document).ready(function() {
 	#datepicker{
 		color:black;
 	}
-<script src="source.js"></script>
-  <script src="now2.js"></script>
-  <style type="text/css">
     
     #datepicker{
       color:black;
@@ -357,7 +385,10 @@ $(document).ready(function() {
             }
         }
 </script>
-<<footer class="footer">
+
+
+
+<footer class="footer">
   <?php
   include('footer.php');
   ?>

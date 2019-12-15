@@ -1,5 +1,6 @@
 <?php
 include('head_admin.php');
+include('connect.php');
 ?>
 <!DOCTYPE html>
 <html>
@@ -15,18 +16,17 @@ include('head_admin.php');
 					<link rel="stylesheet" href="cssform/styley.css">
 </head>
 <body width="10" height="100" align="center">
-	<div class="container">
+<div class="container">
 	<div class="panel panel-default">
-	<div class="panel-heading">
-  <div class="panel panel-primary "style="max-width: 1020px; margin: auto;">
-   <div class="panel-heading"><strong><div class="btn-group btn-group-justified"style="position: fixed;max-width: 988px; margin: auto;">
+  <div class="panel panel-primary" style="max-width: 100%; margin: auto;">
+    <div class="panel-heading"><strong><div class="btn-group btn-group-justified" style="position: fixed;max-width: 80%; margin: auto;" >
     <a href="Add_faculty.php" class="btn btn-primary">Add faculty</a>
-    <a href="Join_new_dept.php" class="btn btn-primary">New program</a>
     <a href="Add_departement.php" class="btn btn-primary">Add department</a>
     <a href="viewfaculty.php" class="btn btn-primary">View faculty</a>
     <a href="select_intake.php" class="btn btn-primary">Intake</a>
-    <a href="selectprogram_dept.php" class="btn btn-primary">Setting</a>
-  </div></strong></div>
+	<a href="selectprogram_dept.php" class="btn btn-primary">Setting Session</a>
+	<a href="select_level_dept.php" class="btn btn-primary">Setting Level</a>
+  </div></strong></div><br>
     	<div class="panel-body">
     	<form action="" method="GET" >
 
@@ -38,8 +38,8 @@ include('head_admin.php');
       </thead>
     </tr>
     <?php
-    $con=mysqli_connect("localhost","root","","churAdmission");
-    $query=mysqli_query($con,"SELECT * from intake_table") or die(mysqli_error($con));
+    //$con=mysqli_connect("localhost","root","","churAdmission");
+    $query=mysqli_query($conn,"SELECT * from intake_table") or die(mysqli_error($conn));
     while ($rows=mysqli_fetch_assoc($query)) {
       # code...
     

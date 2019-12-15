@@ -21,6 +21,7 @@ else{
   <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="css/bootstrap.min.css">
   <link rel="stylesheet" href="cssform/style.css">
+  <link rel ="stylesheet" href="css/responsive.css">
   <title>Christian University of Rwanda</title>
   <style type="text/css">
   /* Paste this css to your style sheet file or under head tag */
@@ -44,6 +45,7 @@ if it's not present, don't show loader */
    width:100%;
      /* Height of the footer */
    background:transparent;
+   z-index:999;
 
 }
     
@@ -71,7 +73,16 @@ if it's not present, don't show loader */
   border-radius: 10px;
   box-shadow: 0 9px #999;
 }
-
+a {
+    color: white!important;
+    font-weight: bold;
+}
+a:hover{
+  color:black!important;
+  }
+  .navbar-nav>li>.dropdown-menu {
+  background: #5bc0de!important;
+}
 .button:hover {background-color: #3e8e41}
 
 .button:active {
@@ -82,7 +93,7 @@ if it's not present, don't show loader */
   </style>
 </head>
 <body><br><br><br>
-  <nav class="navbar navbar-inverse navbar-fixed-top">
+  <nav class="navbar navbar-fixed-top" style="background-color: #428bca;">
     <div class="container-fluid">
       <div class="navbar-header">
         <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
@@ -114,7 +125,7 @@ if it's not present, don't show loader */
           </ul>
           <?php
  $user_id=$_SESSION['user_id'];
-$conn=mysqli_connect("localhost","root","","churAdmission") or die(mysqli_connect_error());
+//$conn=mysqli_connect("localhost","root","","churAdmission") or die(mysqli_connect_error());
 $qr="SELECT * FROM Admin where user_id ='$user_id'";
 $result=mysqli_query($conn,$qr)or die(mysqli_error($con));
 while ($row=mysqli_fetch_array($result)) {
@@ -125,7 +136,7 @@ while ($row=mysqli_fetch_array($result)) {
 ?>
         <ul class="nav navbar-nav navbar-right">
           <li><a href="#"><span class="glyphicon glyphicon-user"></span>
-            
+    
           Welcome <?=$row['fullname'];?>
 
  </a></li>

@@ -1,6 +1,7 @@
 
 <?php
 include('header_user.php');
+include('connect.php');
 ?>
 <!DOCTYPE html>
 <html>
@@ -138,6 +139,10 @@ $(document).ready(function() {
 if(isset($_POST['sendMarch'])){
 $from=$_POST['from'];
 $branch=$_POST['branch'];
+$dept=$_POST['dept_id'];
+$level=$_POST['level_id'];
+$pro=$_POST['program_id'];
+$intake=$_POST['intake'];
 $to=$_POST['to'];
 ?>
 <div class="container">
@@ -150,18 +155,16 @@ $to=$_POST['to'];
     <div class="panel-body" style="max-width: 650px;">
     <div id="divToPrint">	
 <?php
-$con=mysqli_connect("localhost","root","","churAdmission")or die(mysqli_connect_error());
- $query="SELECT DISTINCT registration.ID, registration.reg_date, registration.reg_id, students.ID,students.f_name,students.l_name,students.email,students.sex,students.tel,departement.dept_name,level.level_name,departement.dept_name,program.program_name, registration.intake,registration.branch,program.program_name,registration.startin_intake, faculity.faculity_name from students
-        INNER JOIN program_dept 
+//$con=mysqli_connect("localhost","root","","churAdmission")or die(mysqli_connect_error());
+ $query="SELECT DISTINCT registration.ID, registration.reg_date, students.reg_id, students.ID,students.f_name,students.l_name,students.email,students.sex,students.tel,departement.dept_name,level.level_name,departement.dept_name,program.program_name, registration.intake,registration.branch,program.program_name,registration.startin_intake, faculity.faculity_name from students
          INNER JOIN registration  ON students.ID=registration.ID
          INNER JOIN departement ON registration.dept_id=departement.dept_id 
           
           INNER JOIN faculity ON faculity.faculty_id=departement.faculity_id
           INNER JOIN program ON program.program_id=registration.program_id
-         INNER JOIN level ON level.level_id=registration.level_id WHERE  branch='$branch' AND reg_date between '$from' AND '$to' ";
-        
+INNER JOIN level ON level.level_id=registration.level_id WHERE intake='$intake' AND branch='$branch' AND reg_date between '$from' AND '$to' AND registration.dept_id='$dept' AND registration.level_id='$level' AND registration.program_id='$pro' ";
 
- $result=mysqli_query($con,$query) or die(mysqli_error($con));
+ $result=mysqli_query($conn,$query) or die(mysqli_error($conn));
  if(mysqli_num_rows($result)<=0){
  echo "<center><p style='color:red;'><b>There is no acceptance letter found between $from To $to in $branch Branch</b></p> </center>";
 }
@@ -171,11 +174,13 @@ while ($rows=mysqli_fetch_assoc($result)) {
 	?>
 		<p>
       <div class="page-break">
+       
     <DIV style="page-break-after:always">
+       <div style="overflow: auto;">
 	<table class="table " style="font-size: 10px">
 		<tr><td><img src="pic/churlogo.png"></td><td><b>Christian University Of Rwanda<br>P.O.Box 6638 Kigali<br>Tel:(+250)788310048/0789850000/0788310047(<B>KIGALI</B>)<br>
 		Tel:(+250)788310048/0789850000/0788310047(<B>KARONGI)</B><br>Email:info@chur.ac.rw<br>Website: http://www.chur.ac.rw</b></td></tr>
-		</table><p style="border-bottom: solid;"></p>
+		</table></div><p style="border-bottom: solid;"></p>
 	<b><p style="text-align: right;">Date:<?php echo date('d');?>/ <?php echo date('M');?> / <?php echo date('Y');?></p></b>
 			<?php
 			echo "<b>To: ".strtoupper($rows['f_name'].' '.$rows['l_name'])."<br>Reference No:  ".''.strtoupper($rows['reg_id']).'</b>';
@@ -183,13 +188,13 @@ while ($rows=mysqli_fetch_assoc($result)) {
 			<center><h4><b><u>ACCEPTANCE LETTER</u></b></h4></center><br>
 			<?php
 			$q="SELECT * FROM fees";
-			$result2=mysqli_query($con,$q)or die(mysqli_error($con));
+			$result2=mysqli_query($conn,$q)or die(mysqli_error($conn));
 			while ($row=mysqli_fetch_assoc($result2)) {
 				# code...
 			?>
 			<?php
 			$qr="SELECT * FROM chairman";
-			$result3=mysqli_query($con,$qr)or die(mysqli_error($con));
+			$result3=mysqli_query($conn,$qr)or die(mysqli_error($conn));
 			while ($ro=mysqli_fetch_assoc($result3)) {
 				$total=$row['reg_fees']+$row['student_ID_card']+$row['chursu']+$row['insurance']+$row['library_card']+$row['caution_fees'];
  	echo "Dear Student,<br><br> We are pleased to inform you that your application for admission letter has been accepted at Christian University of Rwanda in <b>".$rows['faculity_name']."</b>, departement of <b>".$rows['dept_name'].'</b> in <b>'.$rows['program_name'].'</b> program <b>'.strtolower($rows['intake']).' intake</b>. Please note the following key information and important dates: <br>

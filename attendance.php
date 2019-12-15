@@ -1,5 +1,6 @@
 <?php
 include('head_admin.php');
+require('connect.php');
 ?>
 <!DOCTYPE html>
 <html>
@@ -143,16 +144,15 @@ $dept_id=$_POST['dept_id'];
 $program_id=$_POST['program_id'];
 $to=$_POST['to'];
 
-$conn=mysqli_connect("localhost","root","","churAdmission")or die(mysqli_connect_error());
- $query="SELECT DISTINCT registration.ID, registration.reg_date, registration.reg_id, students.ID,students.f_name,students.l_name,students.email,students.sex,students.tel,departement.dept_name,level.level_name,departement.dept_name,program.program_name, registration.intake,registration.branch,program.program_name,registration.startin_intake, faculity.faculity_name from students
-        INNER JOIN program_dept 
+//$conn=mysqli_connect("localhost","root","","churAdmission")or die(mysqli_connect_error());
+ $query="SELECT DISTINCT registration.ID, registration.reg_date, students.reg_id, students.ID,students.f_name,students.l_name,students.email,students.sex,students.tel,departement.dept_name,level.level_name,departement.dept_name,program.program_name, registration.intake,registration.branch,program.program_name,registration.startin_intake, faculity.faculity_name from students
          INNER JOIN registration  ON students.ID=registration.ID
          INNER JOIN departement ON registration.dept_id=departement.dept_id 
           
           INNER JOIN faculity ON faculity.faculty_id=departement.faculity_id
           INNER JOIN program ON program.program_id=registration.program_id
          INNER JOIN level ON level.level_id=registration.level_id WHERE registration.dept_id='$dept_id' AND registration.program_id='$program_id' AND registration.level_id='$level_id' AND branch='$branch' AND reg_date between '$from' AND '$to' ";
- $results=mysqli_query($conn,$query) or die(mysqli_error($conn));
+        $results=mysqli_query($conn,$query) or die(mysqli_error($conn));
         ?>
 
 <?php
@@ -161,6 +161,7 @@ if(mysqli_num_rows($results)<=0){
 }
 else{
 ?>
+ <div style="overflow: auto;">
  	<table  class="table table-hover">
 		<tr><td><img src="pic/churlogo.png"></td><td><b>Christian University Of Rwanda<br>P.O.Box 6638 Kigali<br>Tel:(+250)788310048/0789850000/0788310047(<B>KIGALI</B>)<br>
 		Tel:(+250)788310048/0789850000/0788310047(<B>KARONGI)</B><br>Email:info@chur.ac.rw<br>Website: http://www.chur.ac.rw</b></td></tr>
@@ -253,19 +254,20 @@ $i++;
 }
 ?>
 </table>
+</div>
 </p>
 <?php
 }}
 ?>
 </div>
 </table></p>
-
-</div>
-
-</div>
 <center><button class="btn btn-default"><a href="javascript:Clickheretoprint()" style="text-decoration: none;" >Export To PDF</a></button>
 
 </center>
+</div>
+
+</div>
+
 
 </div>
 </div>

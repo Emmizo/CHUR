@@ -1,5 +1,6 @@
 <?php
 include('header.php');
+include('connect.php');
 ?>
 <?php
 session_start();
@@ -13,7 +14,7 @@ $errors = 0;
 
 if (isset($_POST['login'])) {
 	
-$con=mysqli_connect("localhost","root","","churAdmission"); 
+//$con=mysqli_connect("localhost","root","","churAdmission"); 
 
 
 $tbl_name="admin"; // Table name 
@@ -34,9 +35,9 @@ $password = stripslashes($password);
 
 //Query
 
-	$username=mysqli_real_escape_string($con, $_POST['user_username']);
+	$username=mysqli_real_escape_string($conn, $_POST['user_username']);
 
-	$password=mysqli_real_escape_string($con,$_POST['user_password']);
+	$password=mysqli_real_escape_string($conn,$_POST['user_password']);
 	if(empty($_POST['user_username'])){
 		$error = 1;
 		$usernameError = 'Enter your username';
@@ -47,7 +48,7 @@ $password = stripslashes($password);
 	if($errors == 0){
 $sql="SELECT * FROM $tbl_name WHERE user_username='".md5($username)."'  and user_password='".md5($password)."'";
 		//$sql="SELECT * FROM $tbl_name WHERE user_username='$username'  and user_password='$password'";
-$result=mysqli_query($con,$sql)or die(mysqli_error($con));
+$result=mysqli_query($conn,$sql)or die(mysqli_error($conn));
 // Mysql_num_row is counting table row
 if (mysqli_num_rows($result)>0) {
 
@@ -178,6 +179,7 @@ else{
 	setcookie ("user_username",$_POST["user_username"],time()+ 3600);
 	setcookie ("user_password",$_POST["user_password"],time()+ 3600);
 	//echo "Cookies Set Successfuly";
+
 } else {
 	setcookie("user_username","");
 	setcookie("user_password","");
@@ -187,7 +189,7 @@ else{
     </div>
     <button type="submit" class="btn btn-default" name="login">Login</button>
     </form>
-<div><a href="changepassword.php" style="text-decoration: none;color: green;">Click Here If You Forget Password</a></div>
+<div><a href="changepassword.php" style="text-decoration: none;color: green!important; text-transform:lowercase;">Click Here If You Forget Password</a></div>
   					</div>
   				</div>
   			</div>
@@ -200,4 +202,11 @@ else{
 </body>
 <!-- Mirrored from www.w3schools.com/bootstrap/tryit.asp?filename=trybs_form_basic&stacked=h by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 06 Jan 2017 16:50:31 GMT -->
 </html>
+<footer class="footer">
+  <?php
+ 
+  include('footer.php');
+  ?>
+</footer>
+
 

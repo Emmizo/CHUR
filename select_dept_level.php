@@ -5,6 +5,15 @@ include('connect.php');
 <!DOCTYPE html>
 <html>
 <head>
+    <script>
+    //paste this code under head tag or in a seperate js file.
+    // Wait for window load
+    $(window).load(function() {
+        // Animate loader off screen
+        $(".se-pre-con").fadeOut("slow");;
+    });
+</script>
+ <link rel ="stylesheet" href="css/responsive.css">
 	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 					<meta name="viewport" content="width=device-width, initial-scale=1">
 					<link rel="stylesheet" href="css/bootstrap.min.css">
@@ -22,29 +31,31 @@ include('connect.php');
     <a href="select_intake.php" class="btn btn-primary">Intake</a>
 	<a href="selectprogram_dept.php" class="btn btn-primary">Setting Session</a>
 	<a href="select_level_dept.php" class="btn btn-primary">Setting Level</a>
-  </div></strong></div><br>
+  </div></strong></div></br>
+  <div class="se-pre-con"></div>
     	<div class="panel-body">
     	<form action="selectprogram_dept.php" method="GET" >
-    		<table class="table table-hover" style="text-align: left" >
-    			
+            
+   
+    		<table class="table table-hover" style="text-align: left;">
     			<tr>
-    				<th>Faculty ID</th>
-                    <th></th>
-    				<th>Faculty name</th>
-    				
-    				
+    				<th>Program ID</th>
+    				<th>Departement ID</th>
+    				<th>Option</th>
     			</tr>
     		<?php
     		//$conn=mysqli_connect("localhost","root","","churAdmission");
-    		$qr="SELECT * from faculity order by faculty_id ASC";
+    		$qr="SELECT level_dept.id,level_dept.dept_id, level.level_name,departement.dept_name from level_dept 
+    		INNER JOIN level ON level.level_id=level_dept.level_id2
+    		INNER JOIN departement ON departement.dept_id=level_dept.dept_id ORDER BY dept_id ASC, level_id2 ASC";
     		$results=mysqli_query($conn,$qr)or die(mysqli_error($conn));
     		while ($rows=mysqli_fetch_assoc($results)) {
     		?>
 
     			<tr>
-    				<td><?=$rows['faculty_id'];?></td>
-                    <td></td>
-    				<td><a href="viewdept.php?faculity_id=<?=$rows['faculty_id'];?>" style="text-decoration: none;"><?=$rows['faculity_name'];?></a></td>
+    				<td><?=strtoupper($rows['level_name']);?></td>
+    				<td><?=strtoupper($rows['dept_name']);?></td>
+    				<td><?php echo "<a href=\"deleteSetting.php?id=$rows[id]\" onClick=\"return confirm('Are you sure you want to delete?')\" style='text-decoration:none;'><i class='glyphicon glyphicon-trash'></i></a></td>"?></a><i></i></td>
     			</tr>	
 
     		
@@ -53,7 +64,6 @@ include('connect.php');
 ?>
 </table>
 </form>
-</div>
 </div>
 </div>
 </div>

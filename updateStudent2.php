@@ -6,17 +6,15 @@ ob_start();
 <?php
 include('connect.php');
 $ID=$_GET['ID'];
-	$con=mysqli_connect("localhost","root","","churadmission");
-	/*$query="SELECT *FROM students,registration,departement,level,program,faculity WHERE registration.ID='$ID' AND Students.ID='$ID'";*/
-	$query="SELECT DISTINCT registration.reg_id,faculity.faculity_name,registration.intake,program.program_id, students.ID, students.f_name,students.l_name,students.email,students.sex,students.tel,departement.dept_id,level.level_id from students
+	$query="SELECT DISTINCT registration.idreg, students.reg_id,faculity.faculity_name,registration.intake,program.program_id, students.ID, students.f_name,students.l_name,students.email,students.sex,students.tel,departement.dept_id,level.level_id from students
 		
 		INNER JOIN program
          INNER JOIN registration ON students.ID=registration.ID
          INNER JOIN departement ON registration.dept_id=departement.dept_id  
          INNER JOIN faculity ON faculity.faculty_id=departement.faculity_id
          INNER JOIN program_dept
-         INNER JOIN level ON registration.level_id=level.level_id WHERE registration.ID='$ID' AND Students.ID='$ID' ";
-	$result=mysqli_query($con,$query) or die(mysqli_error($con));
+         INNER JOIN level ON registration.level_id=level.level_id WHERE registration.idreg='$ID' ";
+	$result=mysqli_query($conn,$query) or die(mysqli_error($conn));
 	while ($rows=mysqli_fetch_assoc($result)) {
 		$ID=$rows['ID'];
 		$f_name=$rows['f_name'];
@@ -52,8 +50,8 @@ if (isset($_POST['update'])) {
           
           INNER JOIN faculity ON faculity.faculty_id=departement.faculity_id
           INNER JOIN program ON program.program_id=registration.program_id
-         INNER JOIN level ON level.level_id=registration.level_id SET students.f_name='$f_name',students.l_name='$l_name',students.sex='$sex',students.tel='$tel',students.email='$email',registration.reg_id='$reg_id',students.ID='$ID',registration.ID='$ID',registration.dept_id='$dept',registration.program_id='$program',registration.level_id='$level',registration.intake='$intake' WHERE registration.ID='$ID' AND Students.ID='$ID'";
-  $result=mysqli_query($con,$query2)or die(mysqli_error($con));
+         INNER JOIN level ON level.level_id=registration.level_id SET students.f_name='$f_name',students.l_name='$l_name',students.sex='$sex',students.tel='$tel',students.email='$email',students.reg_id='$reg_id',students.ID='$ID',registration.ID='$ID',registration.dept_id='$dept',registration.program_id='$program',registration.level_id='$level',registration.intake='$intake' WHERE registration.idreg='$ID'";
+  $result=mysqli_query($conn,$query2)or die(mysqli_error($conn));
   header("location:./selectStudent2.php");
   }
   ?>

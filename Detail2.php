@@ -1,5 +1,6 @@
 <?php
 include('header_user.php');
+include('connect.php');
 ?>
 <!DOCTYPE html>
 <html>
@@ -140,15 +141,13 @@ $(document).ready(function() {
 <?php
 $ID=$_GET['typeahead'];
 //$f_name=$_GET['f_name'];
-$conn=mysqli_connect("localhost","root","","churAdmission");
-$query="SELECT DISTINCT registration.reg_id, students.ID, students.f_name,students.l_name,students.email,students.sex,students.tel,departement.dept_name,level.level_name,departement.dept_name,students.guardian_name,students.guardian_tel,students.fathername,students.mothername,students.sec_option,students.birthdate,program.program_name,registration.intake,registration.branch,program.program_name,registration.reg_date,registration.startin_intake from students
-         
-         INNER JOIN program_dept 
+//$conn=mysqli_connect("localhost","root","","churAdmission");
+$query="SELECT DISTINCT students.reg_id, students.ID, students.f_name,students.l_name,students.email,students.sex,students.tel,departement.dept_name,level.level_name,departement.dept_name,students.guardian_name,students.guardian_tel,students.fathername,students.mothername,students.sec_option,students.birthdate,program.program_name,registration.intake,registration.branch,program.program_name,registration.reg_date,registration.startin_intake from students
          INNER JOIN registration  ON students.ID=registration.ID 
          INNER JOIN departement ON registration.dept_id=departement.dept_id
          INNER JOIN program ON program.program_id=registration.program_id
          INNER JOIN level ON registration.level_id=level.level_id WHERE students.email='$ID' OR students.tel='$ID' OR students.ID='$ID' OR students.f_name='$ID' OR students.l_name='$ID' 
-         OR registration.reg_id='$ID' OR registration.program_id='$ID' OR departement.dept_name='$ID'OR departement.dept_id='$ID' OR program.program_name='$ID' OR level.level_name='$ID'";
+         OR students.reg_id='$ID' OR registration.program_id='$ID' OR departement.dept_name='$ID'OR departement.dept_id='$ID' OR program.program_name='$ID' OR level.level_name='$ID' ORDER BY registration.reg_date DESC";
  $result=mysqli_query($conn,$query) or die(mysqli_error($conn));
 while ($rows=mysqli_fetch_assoc($result)) {
   //$date=$rows['date'];

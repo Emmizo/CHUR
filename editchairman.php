@@ -3,9 +3,9 @@
 include('head_admin.php');
 include('connect.php');
 $chairman_id=$_GET['chairman_id'];
-  $con=mysqli_connect("localhost","root","","churadmission");
+  //$con=mysqli_connect("localhost","root","","churadmission");
   $query="SELECT *FROM chairman WHERE chairman_id='$chairman_id'";
-  $result=mysqli_query($con,$query) or die(mysqli_error($con));
+  $result=mysqli_query($conn,$query) or die(mysqli_error($conn));
   while ($rows=mysqli_fetch_assoc($result)) {
     $full_name=$rows['full_name'];
     $post=$rows['post'];
@@ -18,7 +18,7 @@ if (isset($_POST['update'])) {
   $post=$_POST['post'];
   
   $query2="UPDATE chairman SET full_name='$full_name',post='$post' WHERE chairman_id='$chairman_id'";
-  $result=mysqli_query($con,$query2)or die(mysqli_error($con));
+  $result=mysqli_query($conn,$query2)or die(mysqli_error($conn));
   header("location:./chairman.php");
   }
   ?>
